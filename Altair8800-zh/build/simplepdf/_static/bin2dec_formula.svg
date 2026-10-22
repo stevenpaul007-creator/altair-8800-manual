@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="104" viewBox="0 0 640 104" role="img" aria-label="二进制数 10011 转换为十进制的过程">
+  <text x="8" y="34" font-family="DejaVu Sans, WenQuanYi Micro Hei, sans-serif" font-size="22" fill="#000">10011 = [(1 &#215; 2&#8308;) + (0 &#215; 2&#179;) + (0 &#215; 2&#178;) + (1 &#215; 2&#185;) + (1 &#215; 2&#8304;)]</text>
+  <text x="70" y="66" font-family="DejaVu Sans, WenQuanYi Micro Hei, sans-serif" font-size="22" fill="#000">= [(16) + (0) + (0) + (2) + (1)]</text>
+  <text x="70" y="96" font-family="DejaVu Sans, WenQuanYi Micro Hei, sans-serif" font-size="22" fill="#000">= 19</text>
+</svg>

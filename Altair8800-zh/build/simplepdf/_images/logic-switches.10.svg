@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="svg110" width="70.39mm" height="11.24mm" fill-rule="evenodd" stroke-linejoin="round" stroke-width="28.222" preserveAspectRatio="xMidYMid" version="1.2" viewBox="0 0 7039 1124" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><metadata id="metadata114"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="https://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata>
+ <defs id="defs8" class="ClipPathGroup"><clipPath id="presentation_clip_path">
+   <rect id="rect2" width="21590" height="27940"/>
+  </clipPath></defs>
+ 
+ 
+ <g id="g49" transform="translate(-7095,-7655)">
+  
+ </g>
+ <g id="g108" class="SlideGroup" transform="translate(-7095,-7655)">
+  <g id="g106">
+   <g id="container-id1">
+    <g id="id1" class="Slide" clip-path="url(#presentation_clip_path)">
+     <g id="g102" class="Page">
+      <g id="g60" class="com.sun.star.drawing.LineShape">
+       <g id="id3">
+        <rect id="rect51" class="BoundingBox" x="11084" y="8471" width="1525" height="301" fill="none"/>
+        <path id="path53" d="m11364 8621h814" fill="none" stroke="#000"/>
+        <path id="path55" d="m11381 8648-8 28-14 27-19 24-24 19-27 14-28 8-27 3-27-3-29-8-27-14-23-19-19-24-14-27-9-28-2-28 2-26 9-29 14-26 19-24 23-19 27-14 29-8 27-3 27 3 28 8 27 14 24 19 19 24 14 26 8 29 3 26z"/>
+        <path id="path57" d="m12608 8621-450-150v300z"/>
+       </g>
+      </g>
+      <g id="g69" class="com.sun.star.drawing.LineShape">
+       <g id="id4">
+        <rect id="rect62" class="BoundingBox" x="12608" y="8471" width="1526" height="301" fill="none"/>
+        <path id="path64" d="m12888 8621h1244" fill="none" stroke="#000"/>
+        <path id="path66" d="m12905 8648-8 28-14 27-19 24-24 19-27 14-28 8-27 3-27-3-29-8-27-14-23-19-19-24-14-27-9-28-2-28 2-26 9-29 14-26 19-24 23-19 27-14 29-8 27-3 27 3 28 8 27 14 24 19 19 24 14 26 8 29 3 26z"/>
+       </g>
+      </g>
+      <g id="g80" class="com.sun.star.drawing.LineShape">
+       <g id="id5">
+        <rect id="rect71" class="BoundingBox" x="8295" y="7655" width="1124" height="1124" fill="none"/>
+        <path id="path73" d="m8538 8535 576-576" fill="none" stroke="#000"/>
+        <path id="path75" d="m8569 8543 14 24 9 29 4 31-4 31-9 29-14 24-17 22-22 17-25 14-29 10-30 3-31-4-28-10-26-12-21-18-18-21-13-26-9-28-4-31 3-30 10-29 14-25 17-22 22-17 24-14 29-9 31-4 31 4 28 8 25 15 22 16z"/>
+        <path id="path77" d="m9418 7655-424 212 212 212z"/>
+       </g>
+      </g>
+      <g id="g91" class="com.sun.star.drawing.LineShape">
+       <g id="id6">
+        <rect id="rect82" class="BoundingBox" x="9839" y="8445" width="1525" height="301" fill="none"/>
+        <path id="path84" d="m10119 8595h964" fill="none" stroke="#000"/>
+        <path id="path86" d="m10136 8622-8 28-14 27-19 24-24 19-27 14-28 8-27 3-27-3-29-8-27-14-23-19-19-24-14-27-9-28-2-28 2-26 9-29 14-26 19-24 23-19 27-14 29-8 27-3 27 3 28 8 27 14 24 19 19 24 14 26 8 29 3 26z"/>
+        <path id="path88" d="m11066 8568 8-28 14-27 19-24 24-19 27-14 28-8 27-3 27 3 29 8 27 14 23 19 19 24 14 27 9 28 2 28-2 26-9 29-14 26-19 24-23 19-27 14-29 8-27 3-27-3-28-8-27-14-24-19-19-24-14-26-8-29-3-26z"/>
+       </g>
+      </g>
+      <g id="g100" class="com.sun.star.drawing.LineShape">
+       <g id="id7">
+        <rect id="rect93" class="BoundingBox" x="7095" y="8470" width="1526" height="301" fill="none"/>
+        <path id="path95" d="m7096 8620h1244" fill="none" stroke="#000"/>
+        <path id="path97" d="m8323 8593 8-28 14-27 19-24 24-19 27-14 28-8 27-3 27 3 29 8 27 14 23 19 19 24 14 27 9 28 2 28-2 26-9 29-14 26-19 24-23 19-27 14-29 8-27 3-27-3-28-8-27-14-24-19-19-24-14-26-8-29-3-26z"/>
+       </g>
+      </g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>

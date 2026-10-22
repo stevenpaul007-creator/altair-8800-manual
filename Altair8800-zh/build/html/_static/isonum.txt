@@ -1,0 +1,27 @@
+.. Unicode character mappings.
+   See <https://www.w3.org/2003/entities/xml/>.
+   Processed by unicode2rstsubs.py, part of Docutils:
+   <https://docutils.sourceforge.net>.
+.. Additional mappings at /usr/share/docutils/parsers/rst/include/*.txt
+.. Last edited by Kevin Cole <kevin.cole@novawebdevelopment> 2020.08.26 (kjc)
+   2011.02.07 KJC - added en-dash, em-dash, ellipsis and a-umlaut
+   2020.08.26 KJC - copy -> cpyrgt, added cpylft
+
+.. |cpyrgt| unicode:: U+000A9 .. COPYRIGHT SIGN
+.. |cpylft| unicode:: U+1F12F .. COPYLEFT SYMBOL
+.. |--|     unicode:: U+2013  .. EN DASH
+   :trim:
+.. |---|    unicode:: U+2014  .. EM DASH
+   :trim:
+.. |...|    unicode:: U+2026  .. ELLIPSIS
+   :trim:
+.. |auml|   unicode:: U+00E4  .. A UMLAUT
+   :trim:
+.. |aacute| unicode:: U+000E1 .. LATIN SMALL LETTER A WITH ACUTE
+   :trim:
+.. |eacute| unicode:: U+000E9 .. LATIN SMALL LETTER E WITH ACUTE
+   :trim:
+.. |iacute| unicode:: U+000ED .. LATIN SMALL LETTER I WITH ACUTE
+   :trim:
+.. |oacute| unicode:: U+000F3 .. LATIN SMALL LETTER O WITH ACUTE
+   :trim:

@@ -1,0 +1,126 @@
+The following is the original version of the zero RAM program, as assembler
+language and the corresponding octal op codes -- with one tiny addition,
+explained below.
+
+The first column (the number preceeding the colon) is the address in
+RAM where the instruction or data is placed.  The second colum is
+between one and three bytes long, and contains either the op code that
+corresponds to the mnemonic on the right, or the data.
+
+Things not covered in the manual:
+
+* "ORG" sets the address where the following code will be placed. It
+  is roughly the equivalent of toggling an address into the front
+  panel and then toggling EXAMINE.
+
+* "EQU" is a way to define a constant. In this case, "FILL: EQU 000o"
+  means that anywhere "FILL" occurs in the code, you could have put
+  "000o". It is a convenience to make code more readable. It does NOT
+  occupy any memory. It is only used by the assembler during the
+  conversion from assembly language to machine op codes.
+
+* The other labels ("LOOP", "FIRST", and "LAST") are synonymous with
+  the location where they occur. So, for example, "FIRST" could be
+  replaced with" 100o".
+
+* "DW" is "Define Word" and stores two bytes worth of data at the
+  locaion where it occurs.
+
+* Although explained in the manual, it's not clear: The use of "M" or
+  "memory reference M". The instruction "MVI M,FILL" uses the value of
+  the HL register pair as pointer (an address) to a location in
+  memory. In this case, it does a "Move Immediate" of the contant 000o
+  to the location pointed to by the HL register pair.
+  
+Study the octal on the left, corresponding to the elements above in
+order to get a better idea of what they mean.
+
+As for the algorithm, the logic of the code is:
+
+The Altair can add two 16-bit numbers together by using the Double Add
+(DAD) instruction together with register pairs. However, it cannot
+subtract two 16-bit numbers. (It can only subtract 8-bit numbers.) In
+order to achieve subtraction, one must first convert the number to be
+subtracted into a negative number, by taking the two's complement. CMA
+is a "one's complement" of the contents of the accumulator, i.e. a
+Boolean NOT, flipping all 0 bits to 1 and vice versa. So, flipping
+each register of the register pair, and then incrementing by one,
+gives the two's complement.
+
+Subtracting the address of the first byte to be set to zero, from the
+address of the last byte to be set to zero will yield the number of
+bytes to be set, minus one. For example, if FIRST is 4o and LAST is
+7o, then 7 - 4 = 3, but we want to actually zero locations 4, 5, 6,
+and 7. So, we need to add one to the result of the subtraction. This
+can be done with an increment instruction.
+
+The version you were working from did not contain that additional one,
+and thus would zero one less location than it should. That's the only
+difference between the version you worked with, and mine below.
+
+Once we know the starting address (FIRST) and the count, ((LAST -
+FIRST) + 1), we can put a zero in the address pointed to by FIRST,
+increment the pointer, and decrement the count until the count reaches
+zero.
+
+Unfortunately (and I complain about it in the comments at the top),
+decrementing to zero does NOT trigger the zero flag. Thus, the
+JNZ (Jump if Not Zero) always jumps... Unless... one figures out
+a non-destructive operation that will set the zero flag.  It turns
+out that using a Boolean OR with the high order byte and low order
+byte of a register pair as arguments will do the trick.
+
+See the comments along the right edge of each instruction for a
+deeper understanding.
+
+                     | ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                     | ;
+                     | ; NAME:    scram2.asm
+                     | ; AUTHOR:  Kevin Cole ("The Ubuntourist") kevin.cole@novawebdevelopment.org
+                     | ; LASTMOD: 2021.01.11 (kjc)
+                     | ;
+                     | ; DESCRIPTION:
+                     | ;
+                     | ;     Set to Clear all RAM (SCRAM) in a specified range. Despite my
+                     | ;     love of assembler, I become less enamored by Intel 8080's "argh-
+                     | ;     itecture". For example, subtracting one register pair from
+                     | ;     another requires 10 instructions. And decrementing a register
+                     | ;     pair to zero does NOT set the zero flag... How delightfully
+                     | ;     droll. It's these little unexpected gems that cost me hours.
+                     | ;
+                     | ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                     |
+                     | ; Code segment
+                     |
+                     |            ORG     000o    ; Set the location counter to 0 (octal)
+                     |
+     0 : 052 100 000 |            LHLD    FIRST   ; Load register pair HL w/ address of first byte
+     3 : 174         |            MOV     A,H     ; Negate HL and store in DE (get high order byte)
+     4 : 057         |            CMA             ;   "    "   "    "   "  "  (complement high order)
+     5 : 127         |            MOV     D,A     ;   "    "   "    "   "  "  (store in D)
+     6 : 175         |            MOV     A,L     ;   "    "   "    "   "  "  (get low order byte)
+     7 : 057         |            CMA             ;   "    "   "    "   "  "  (complement low order)
+    10 : 137         |            MOV     E,A     ;   "    "   "    "   "  "  (store in E)
+    11 : 023         |            INX     D       ;   "    "   "    "   "  "  (make 2's complement)
+    12 : 052 102 000 |            LHLD    LAST    ; Load register pair HL w/ address of last byte
+    15 : 031         |            DAD     D       ; Daddy? ;-) byte count in HL = LAST - FIRST
+    16 : 353         |            XCHG            ; Store byte count in DE
+    17 : 023         |            INX     D       ; Actually, byte count is off by one. Fix it.
+    20 : 052 100 000 |            LHLD    FIRST   ; First location to fill
+    23 : 066 252     | LOOP:      MVI     M,FILL  ; Move fill pattern into memory location
+    25 : 043         |            INX     H       ; Point to next memory location
+    26 : 033         |            DCX     D       ; Decrement number of bytes remaining
+    27 : 172         |            MOV     A,D     ; Check if bytes remaining (register pair DE) is...
+    30 : 263         |            ORA     E       ; ...zero by logically OR'ing D with E
+    31 : 302 023 000 |            JNZ     LOOP    ; Repeat until bytes remaining = 0
+    34 : 166         |            HLT             ; Don't try to execute random crap following code end
+                     |
+                     | ; Data segment
+                     |
+                     |            ORG     100o
+                     |
+         =000        | FILL:      EQU     000o    ; Fill pattern
+   100 : 100 000     | FIRST:     DW      100o    ; First memory location to be filled
+   102 : 137 000     | LAST:      DW      137o    ; Last  memory location to be filled
+                     |
+   104 :             |            END             ; End

@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="服务" />
+<meta property="og:type" content="book" />
+<meta property="og:url" content="https://ubuntourist.codeberg.page/service.html" />
+<meta property="og:site_name" content="Altair 8800 操作手册（2020 版）" />
+<meta property="og:description" content="如果你的计算机出现问题，可以将其退回 MITS 维修。如果设备仍在保修 期内，任何有缺陷的部件都将免费更换。购机者需承担所有邮费。任何情况 下，都不得在外壳未完全装配好的情况下将设备寄回。 如果你因故需要将设备退回我们，请拆下计算机的..." />
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Altair_8800_and_Model_33_ASR_Teletype_.jpg/1024px-Altair_8800_and_Model_33_ASR_Teletype_.jpg" />
+<meta property="og:image:alt" content="Altair 8800 and Model 33 ASR teletype" />
+<meta name="description" content="如果你的计算机出现问题，可以将其退回 MITS 维修。如果设备仍在保修 期内，任何有缺陷的部件都将免费更换。购机者需承担所有邮费。任何情况 下，都不得在外壳未完全装配好的情况下将设备寄回。 如果你因故需要将设备退回我们，请拆下计算机的..." />
+<meta property="og:book:release_date" content="2020-09-20">
+<meta property="og:book:author"  content="Kevin Cole">
+<meta property="og:book:tag"     content="altair">
+<meta property="og:book:tag"     content="8800">
+<meta property="og:book:tag"     content="intel">
+<meta property="og:book:tag"     content="assembly language">
+<meta property="og:book:tag"     content="machine code">
+<meta property="og:book:tag"     content="education">
+<meta property="og:image:width"  content="1024">
+<meta property="og:image:height" content="768" >
+<meta property="og:description"  content="机器操作码、架构细节、汇编器与模拟器的安装和使用等文档">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@codeberg_org">
+<meta name="twitter:creator"     content="@ubuntourist">
+<meta name="twitter:title"       content="Altair 8800 Operator's Manual, 2020 Edition">
+<meta name="twitter:description" content="Documentation on machine op codes, architectural details, installation and usage of an assembler and simulator, and more">
+<meta name="twitter:image"       content="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Altair_8800_and_Model_33_ASR_Teletype_.jpg/1024px-Altair_8800_and_Model_33_ASR_Teletype_.jpg">
+
+    <title>服务 &#8212; Altair 8800 操作手册 v2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" type="text/css" href="_static/table_styling.css?v=a1a2a898" />
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/widths.css" type="text/css" />
+    <link rel="stylesheet" href="_static/background.css" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi%7COpen+Sans:400,i,b,bi%7CRoboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="_static/documentation_options.js?v=8ba3eb92"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/translations.js?v=540d3cec"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="icon" href="/images/icon-lightning.svg"/>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="MITS ALTATR 8800 价目表" href="price-list.html" />
+    <link rel="prev" title="资源" href="resources.html" />
+   
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="me" href="https://musician.social/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://musicians.today/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.social/@ubuntourist"   aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.well.com/@kjcole"      aria-label="Mastodon profile"  />
+  <link rel="me" href="https://social.trom.tf/profile/tadonic" aria-label="Friendica profile" />
+
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right loop_first">
+          <a href="genindex.html" title="总索引"
+             accesskey="I">索引</a></li>
+        <li class="right">
+          <a href="price-list.html" title="MITS ALTATR 8800 价目表"
+             accesskey="N">下一页</a> &nbsp; &nbsp;</li>
+        <li class="right">
+          <a href="resources.html" title="资源"
+             accesskey="P">上一页</a> &nbsp; &nbsp;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Altair 8800 操作手册 v2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">服务</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="id1">
+<h1>服务<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h1>
+<p>如果你的计算机出现问题，可以将其退回 MITS 维修。如果设备仍在保修
+期内，任何有缺陷的部件都将免费更换。购机者需承担所有邮费。任何情况
+下，都不得在外壳未完全装配好的情况下将设备寄回。</p>
+<p>如果你因故需要将设备退回我们，请拆下计算机的顶盖，用胶带将各电路板
+固定在各自的插座中，并在机箱顶部与电路板之间填满包装材料。盖好顶
+盖，将设备装入坚固的纸箱，四周衬以厚厚一层包装材料。你可以使用碎报
+纸、泡沫塑料或木丝。包装好的纸箱应用胶带整齐封好，并用结实的绳子捆
+牢。务必在盒子外面用胶带贴上一封信，信中写明你的姓名、地址、故障描
+述，以及原始发票（如果设备仍在保修期内）。</p>
+<p>包裹可通过邮政包裹或 UPS–邮寄；如需更快的服务，可通过航空邮政包
+裹寄送。务必为包裹投保。</p>
+<table class="styled-table docutils align-default">
+<tbody>
+<tr class="row-odd"><td class="left-align"><p>邮寄至：</p></td>
+<td class="left-align"><p>MITS, Inc.          <span class="raw-html"><br></span>
+6328 Linn Ave. N.E. <span class="raw-html"><br></span>
+Albuquerque, New Mexico 87108</p></td>
+</tr>
+</tbody>
+</table>
+<p>如果对机器的基本设计进行了任何更改，或以任何方式动过机器的内部结
+构，所有保修均告失效。</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="resources.html"
+                          title="Previous page">&larr; 资源</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="price-list.html"
+                          title="Next page">&rarr; MITS ALTATR 8800 价目表</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/service.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input type="submit" value="提交">
+    </form>
+    </div>
+</div>
+<script src="../_static/restyle_searchbox.js"></script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right loop_first">
+          <a href="genindex.html" title="总索引"
+             >索引</a></li>
+        <li class="right">
+          <a href="price-list.html" title="MITS ALTATR 8800 价目表"
+             >下一页</a> &nbsp; &nbsp;</li>
+        <li class="right">
+          <a href="resources.html" title="资源"
+             >上一页</a> &nbsp; &nbsp;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Altair 8800 操作手册 v2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">服务</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo" aria-label="footer contentinfo">
+<span class="license-text"
+   prefix="dct: http://purl.org/dc/terms/ cc: http://creativecommons.org/ns#"><a
+   rel="cc:attributionURL"
+   property="dct:title"
+   href="https://ubuntourist.codeberg.page/">Ubuntourist Trap</a>
+&#x1f12f; Copyleft 1975 by
+<a rel="cc:attributionURL dct:creator"
+   property="cc:attributionName"
+   href="https://codeberg.org/ubuntourist/">Kevin Cole</a>
+(<a rel="me"
+    href="https://mastodon.social/@ubuntourist"
+    aria-label="Mastodon profile">Tadonic the Flautulant</a>)
+is licensed under
+<a rel="license"
+   href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0<img
+   class="cc" alt="Creative Commons 4.0 license (CC) "
+   src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img
+   class="cc" alt="with Attribution (BY), "
+   src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><img
+   class="cc" alt="Share Alike (SA)"
+   src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"></a></span>
+      Created using <a href="https://sphinx-doc.org/">Sphinx</a> 9.2.0.
+    </div>
+  </body>
+</html>

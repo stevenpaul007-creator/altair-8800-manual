@@ -1,0 +1,221 @@
+
+
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="第 0 部分：前言：版本说明、致谢等" />
+<meta property="og:type" content="book" />
+<meta property="og:url" content="https://ubuntourist.codeberg.page/part-0.html" />
+<meta property="og:site_name" content="Altair 8800 操作手册（2020 版）" />
+<meta property="og:description" content="这项倾注热爱的工作由 Kevin Cole（&quot;The Ubuntourist&quot;）于 2020 年 9 月发起，旨在为 计算机系统课程 提供补充。 本文档的读者可以使用 Ian Davies 开发的出色 MITS A..." />
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Altair_8800_and_Model_33_ASR_Teletype_.jpg/1024px-Altair_8800_and_Model_33_ASR_Teletype_.jpg" />
+<meta property="og:image:alt" content="Altair 8800 and Model 33 ASR teletype" />
+<meta name="description" content="这项倾注热爱的工作由 Kevin Cole（&quot;The Ubuntourist&quot;）于 2020 年 9 月发起，旨在为 计算机系统课程 提供补充。 本文档的读者可以使用 Ian Davies 开发的出色 MITS A..." />
+<meta property="og:book:release_date" content="2020-09-20">
+<meta property="og:book:author"  content="Kevin Cole">
+<meta property="og:book:tag"     content="altair">
+<meta property="og:book:tag"     content="8800">
+<meta property="og:book:tag"     content="intel">
+<meta property="og:book:tag"     content="assembly language">
+<meta property="og:book:tag"     content="machine code">
+<meta property="og:book:tag"     content="education">
+<meta property="og:image:width"  content="1024">
+<meta property="og:image:height" content="768" >
+<meta property="og:description"  content="机器操作码、架构细节、汇编器与模拟器的安装和使用等文档">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@codeberg_org">
+<meta name="twitter:creator"     content="@ubuntourist">
+<meta name="twitter:title"       content="Altair 8800 Operator's Manual, 2020 Edition">
+<meta name="twitter:description" content="Documentation on machine op codes, architectural details, installation and usage of an assembler and simulator, and more">
+<meta name="twitter:image"       content="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Altair_8800_and_Model_33_ASR_Teletype_.jpg/1024px-Altair_8800_and_Model_33_ASR_Teletype_.jpg">
+
+    <title>第 0 部分：前言：版本说明、致谢等 &#8212; Altair 8800 操作手册 v2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" type="text/css" href="_static/table_styling.css?v=a1a2a898" />
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/widths.css" type="text/css" />
+    <link rel="stylesheet" href="_static/background.css" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi%7COpen+Sans:400,i,b,bi%7CRoboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="_static/documentation_options.js?v=8ba3eb92"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/translations.js?v=540d3cec"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="icon" href="/images/icon-lightning.svg"/>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="第 1 部分：数制、逻辑与程序设计" href="part-1.html" />
+    <link rel="prev" title="Altair 8800 操作手册" href="index.html" />
+   
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="me" href="https://musician.social/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://musicians.today/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.social/@ubuntourist"   aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.well.com/@kjcole"      aria-label="Mastodon profile"  />
+  <link rel="me" href="https://social.trom.tf/profile/tadonic" aria-label="Friendica profile" />
+
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right loop_first">
+          <a href="genindex.html" title="总索引"
+             accesskey="I">索引</a></li>
+        <li class="right">
+          <a href="part-1.html" title="第 1 部分：数制、逻辑与程序设计"
+             accesskey="N">下一页</a> &nbsp; &nbsp;</li>
+        <li class="right">
+          <a href="index.html" title="Altair 8800 操作手册"
+             accesskey="P">上一页</a> &nbsp; &nbsp;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Altair 8800 操作手册 v2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">第 0 部分：前言：版本说明、致谢等</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="id1">
+<h1>第 0 部分：前言：版本说明、致谢等<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h1>
+<p>这项倾注热爱的工作由 Kevin Cole（&quot;The Ubuntourist&quot;）于 2020 年 9 月发起，旨在为 <a class="reference external" href="https://ict.gctaa.net/sections/csc215/">计算机系统课程</a> 提供补充。</p>
+<p>本文档的读者可以使用 Ian Davies 开发的出色 <a class="reference external" href="https://www.s2js.com/altair/">MITS Altair 8800 simulator</a> 来测试自己的代码，或者只需 $621（US）即可拥有一台实体 <a class="reference external" href="https://altairclone.com/">Altair 8800 Clone</a>，配有拨动开关、闪烁的红色 LED 等等。</p>
+<p>初学者可能会觉得 YouTube 上 <a class="reference external" href="https://www.youtube.com/playlist?list=PLgpana-oqo-KSE-Hlc3uLJ9xISCByBpO1">Patrick Jackson 的视频</a> 相当有参考价值。</p>
+<p>除了将 <a class="reference external" href="http://dunfield.classiccmp.org/altair/d/88opman.pdf">扫描印刷品</a> 转换为可搜索的 HTML 之外，本版本还包含对原文档中排印错误的更正，以及一些补充材料，尤其涉及 <a class="reference external" href="https://en.wikipedia.org/wiki/Adder_(electronics)#Half_adder">半加器</a> 电路、<a class="reference external" href="linux.html">在 Linux 系统下汇编并加载代码的说明</a>，以及 <a class="reference external" href="addendum.html">快进到 2020 年</a> —— 后者同时包含用 <strong>GNU Assembler（gas）</strong> 和 <strong>Netwide Assembler（nasm）</strong> 编写的 <strong>&quot;Hello World&quot;</strong>。</p>
+<p>若要深入了解 Intel 8080 CPU，请参阅 <a class="reference external" href="https://altairclone.com/downloads/manuals/8080%20Programmers%20Manual.pdf">Intel 8080 编程手册</a>，唉，它多半不会由我转换为 HTML 了。它有*一点* 😉 太远了。</p>
+<hr class="docutils" />
+<p>从 PDF 扫描印刷品到 HTML（以及最终更好的 PDF）的转换，是借助以下工具完成的：<a href="#id2"><span class="problematic" id="id3">**</span></a>pdftoppm**（<a class="reference external" href="https://en.wikipedia.org/wiki/Poppler_(software)#poppler-utils">poppler-utils</a> 工具之一）、<a class="reference external" href="https://en.wikipedia.org/wiki/Tesseract_(software)">Tesseract-OCR</a>、<a class="reference external" href="https://en.wikipedia.org/wiki/Inkscape">Inkscape</a>、基于 <a class="reference external" href="https://cloud-sptheme.readthedocs.io/en/latest/cloud_theme.html">Cloud</a> 主题的 <a class="reference external" href="https://en.wikipedia.org/wiki/Sphinx_(documentation_generator)">Sphinx</a>，当然还有 <a href="#id4"><span class="problematic" id="id5">`</span></a>One True Editor`_（&quot;顶礼膜拜！&quot;）|wink|。</p>
+<p>印刷品本身来自一座金矿：<a class="reference external" href="https://classiccmp.org/">Classic Computing</a> 网站上的 <a class="reference external" href="https://dunfield.themindfactory.com/">Dave Dunfield's</a> 页面 <a class="reference external" href="http://dunfield.classiccmp.org/">Daves Old Computers</a>。认真的学生和爱好者不妨戴上安全帽，去那里挖上一番。（金丝雀可选。😉）</p>
+<p>源代码和渲染出的 HTML 托管在 <strong>Codeberg.org</strong>，因为我**真的**很喜欢他们的 <a class="reference external" href="https://blog.codeberg.org/codebergorg-launched.html">使命宣言</a>。</p>
+<p>如果你发现了问题，可以提交 <a class="reference external" href="https://codeberg.org/ubuntourist/Altair8800/issues">issue</a>。</p>
+<p>由于 Micro Instrumentation and Telemetry Systems（MITS）公司已经不复存在，我们曾尝试联系版权持有人，但可惜搜寻无果。</p>
+<p>无论如何，原作的版权归 <a class="reference external" href="https://en.wikipedia.org/wiki/Micro_Instrumentation_and_Telemetry_Systems">MITS, Inc</a> 所有：Copyright © 1975。</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="index.html"
+                          title="Previous page">&larr; Altair 8800 操作手册</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="part-1.html"
+                          title="Next page">&rarr; 第 1 部分：数制、逻辑与程序设计</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/part-0.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input type="submit" value="提交">
+    </form>
+    </div>
+</div>
+<script src="../_static/restyle_searchbox.js"></script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right loop_first">
+          <a href="genindex.html" title="总索引"
+             >索引</a></li>
+        <li class="right">
+          <a href="part-1.html" title="第 1 部分：数制、逻辑与程序设计"
+             >下一页</a> &nbsp; &nbsp;</li>
+        <li class="right">
+          <a href="index.html" title="Altair 8800 操作手册"
+             >上一页</a> &nbsp; &nbsp;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Altair 8800 操作手册 v2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">第 0 部分：前言：版本说明、致谢等</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo" aria-label="footer contentinfo">
+<span class="license-text"
+   prefix="dct: http://purl.org/dc/terms/ cc: http://creativecommons.org/ns#"><a
+   rel="cc:attributionURL"
+   property="dct:title"
+   href="https://ubuntourist.codeberg.page/">Ubuntourist Trap</a>
+&#x1f12f; Copyleft 1975 by
+<a rel="cc:attributionURL dct:creator"
+   property="cc:attributionName"
+   href="https://codeberg.org/ubuntourist/">Kevin Cole</a>
+(<a rel="me"
+    href="https://mastodon.social/@ubuntourist"
+    aria-label="Mastodon profile">Tadonic the Flautulant</a>)
+is licensed under
+<a rel="license"
+   href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0<img
+   class="cc" alt="Creative Commons 4.0 license (CC) "
+   src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img
+   class="cc" alt="with Attribution (BY), "
+   src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><img
+   class="cc" alt="Share Alike (SA)"
+   src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"></a></span>
+      Created using <a href="https://sphinx-doc.org/">Sphinx</a> 9.2.0.
+    </div>
+  </body>
+</html>

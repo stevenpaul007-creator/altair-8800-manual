@@ -1,0 +1,859 @@
+
+
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="第 1 部分：数制、逻辑与程序设计" />
+<meta property="og:type" content="book" />
+<meta property="og:url" content="https://ubuntourist.codeberg.page/part-1.html" />
+<meta property="og:site_name" content="Altair 8800 操作手册（2020 版）" />
+<meta property="og:description" content="半导体技术的卓越进步使 ALTAIR 8800 的开发成为可能：它是迄今为止最经济的计算机，也是第一种同时以套件和整机两种形式供应的计算机。 本操作手册旨在帮助新手和经验丰富的计算机用户熟悉 ALTAIR 8800 的操作。这台计算机..." />
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Altair_8800_and_Model_33_ASR_Teletype_.jpg/1024px-Altair_8800_and_Model_33_ASR_Teletype_.jpg" />
+<meta property="og:image:alt" content="Altair 8800 and Model 33 ASR teletype" />
+<meta name="description" content="半导体技术的卓越进步使 ALTAIR 8800 的开发成为可能：它是迄今为止最经济的计算机，也是第一种同时以套件和整机两种形式供应的计算机。 本操作手册旨在帮助新手和经验丰富的计算机用户熟悉 ALTAIR 8800 的操作。这台计算机..." />
+<meta property="og:book:release_date" content="2020-09-20">
+<meta property="og:book:author"  content="Kevin Cole">
+<meta property="og:book:tag"     content="altair">
+<meta property="og:book:tag"     content="8800">
+<meta property="og:book:tag"     content="intel">
+<meta property="og:book:tag"     content="assembly language">
+<meta property="og:book:tag"     content="machine code">
+<meta property="og:book:tag"     content="education">
+<meta property="og:image:width"  content="1024">
+<meta property="og:image:height" content="768" >
+<meta property="og:description"  content="机器操作码、架构细节、汇编器与模拟器的安装和使用等文档">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@codeberg_org">
+<meta name="twitter:creator"     content="@ubuntourist">
+<meta name="twitter:title"       content="Altair 8800 Operator's Manual, 2020 Edition">
+<meta name="twitter:description" content="Documentation on machine op codes, architectural details, installation and usage of an assembler and simulator, and more">
+<meta name="twitter:image"       content="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Altair_8800_and_Model_33_ASR_Teletype_.jpg/1024px-Altair_8800_and_Model_33_ASR_Teletype_.jpg">
+
+    <title>第 1 部分：数制、逻辑与程序设计 &#8212; Altair 8800 操作手册 v2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" type="text/css" href="_static/table_styling.css?v=a1a2a898" />
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/widths.css" type="text/css" />
+    <link rel="stylesheet" href="_static/background.css" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi%7COpen+Sans:400,i,b,bi%7CRoboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="_static/documentation_options.js?v=8ba3eb92"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/translations.js?v=540d3cec"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="icon" href="/images/icon-lightning.svg"/>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="第 2 部分：ALTAIR 8800 的组成" href="part-2.html" />
+    <link rel="prev" title="第 0 部分：前言：版本说明、致谢等" href="part-0.html" />
+   
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="me" href="https://musician.social/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://musicians.today/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.social/@ubuntourist"   aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.well.com/@kjcole"      aria-label="Mastodon profile"  />
+  <link rel="me" href="https://social.trom.tf/profile/tadonic" aria-label="Friendica profile" />
+
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right loop_first">
+          <a href="genindex.html" title="总索引"
+             accesskey="I">索引</a></li>
+        <li class="right">
+          <a href="part-2.html" title="第 2 部分：ALTAIR 8800 的组成"
+             accesskey="N">下一页</a> &nbsp; &nbsp;</li>
+        <li class="right">
+          <a href="part-0.html" title="第 0 部分：前言：版本说明、致谢等"
+             accesskey="P">上一页</a> &nbsp; &nbsp;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Altair 8800 操作手册 v2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">第 1 部分：数制、逻辑与程序设计</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="id1">
+<h1>第 1 部分：数制、逻辑与程序设计<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h1>
+<p>半导体技术的卓越进步使 <em>ALTAIR 8800</em> 的开发成为可能：它是迄今为止最经济的计算机，也是第一种同时以套件和整机两种形式供应的计算机。</p>
+<p>本操作手册旨在帮助新手和经验丰富的计算机用户熟悉 <em>ALTAIR 8800</em> 的操作。这台计算机有 78 条机器语言指令，能够执行若干传统小型计算机通常不具备的重要操作。读完本手册，即使是新手也能把程序装入 <em>ALTAIR 8800</em> 。</p>
+<p><em>ALTAIR 8800</em> 的用户中，既有电子学背景扎实但几乎没有计算机经验的人，也有相当编程经验但几乎没有电子学背景的人。因此，本手册的编写兼顾了所有类型的用户。</p>
+<p>手册的 <a class="reference external" href="part-1.html">第 1 部分</a> 帮助用户更好地理解计算机术语、技术和操作，内容包括传统逻辑与电子逻辑的引论、若干重要数制的说明、基础程序设计的讨论，以及计算机语言的论述。</p>
+<p>手册的 <a class="reference external" href="part-2.html">第 2 部分</a> 和 <a class="reference external" href="part-3.html">第 3 部分</a> 描述 <em>ALTAIR 8800</em> 的组织和操作，重点放在计算机中用户最常使用的那些部分上。最后，手册的`第 4 部分`_ 详细列出 <em>ALTAIR 8800</em> 的 78 条指令，<a class="reference external" href="appendix.html">附录</a> 则把这些指令压缩成一份快速参考清单。</p>
+<p>即使你对计算机的操作和组织几乎没有经验，仔细阅读本手册也能使你学会操作 <em>ALTAIR 8800</em> 。随着你对这台机器经验的积累，你很快就会理解它真正令人难以置信的通用性和数据处理能力。如果本手册在某些地方显得太复杂，不要气馁。只要记住：计算机只做它的程序员指令它的事。</p>
+<section id="a">
+<h2>A. 逻辑<a class="headerlink" href="#a" title="链接到此标题。">¶</a></h2>
+<p>George Boole 是十九世纪英国数学家，他详细研究了某些基本逻辑表达式与其算术对应物之间的关系。布尔并不把数学等同于逻辑，但他确实展示了任何逻辑陈述都可以用简单的算术关系来分析。1847 年，布尔出版了一本名为 <a class="reference external" href="https://www.gutenberg.org/ebooks/36884">逻辑的数学分析</a> 的小册子；1854 年，他就该主题出版了一部详尽得多的著作。直到今天，所有实用的数字计算机和许多其他电子电路都建立在布尔阐明的逻辑概念之上。</p>
+<p>布尔的逻辑系统常被称为布尔代数，它假定一个逻辑条件或陈述要么为真，要么为假。它不可能既真又假，也不可能部分为真或部分为假。幸运的是，电子电路非常适合于这种双状态运行。如果把导通状态的电路称为真、断开状态的电路称为假，就可以方便地合成出逻辑陈述的电子类似物。</p>
+<p>据此，可以为三种基本逻辑语句——与、或、非——设计电子等价物。仅当 <strong>所有</strong> 逻辑条件都为真时，与语句才为真。如果 <strong>任一</strong> 逻辑条件为真，或语句就为真。非语句只是颠倒逻辑语句的含义，使真语句变成假，假语句变成真。</p>
+<p>用通断开关可以方便地生成这三种逻辑语句的简单等价物。接通的开关被称为真，断开的开关被称为假。由于断开的开关不让电流通过，可以给它赋数值 0；类似地，接通的开关能让电流通过，可以赋数值 1。</p>
+<p>现在，通过考察双条件与语句的各种排列组合，我们可以设计出逻辑与语句的电子等价物：</p>
+<div class="center docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>条件（输入）</p></th>
+<th class="head"><p>与</p></th>
+<th class="head"><p>条件（输入）</p></th>
+<th class="head"><p>结论（输出）</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>假</p></td>
+<td><p>与</p></td>
+<td><p>假</p></td>
+<td><p>假</p></td>
+</tr>
+<tr class="row-odd"><td><p>假</p></td>
+<td><p>与</p></td>
+<td><p>真</p></td>
+<td><p>假</p></td>
+</tr>
+<tr class="row-even"><td><p>真</p></td>
+<td><p>与</p></td>
+<td><p>假</p></td>
+<td><p>假</p></td>
+</tr>
+<tr class="row-odd"><td><p>真</p></td>
+<td><p>与</p></td>
+<td><p>真</p></td>
+<td><p>真</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>这些排列组合的电子开关等价形式很简单：</p>
+<div class="center docutils container">
+<table class="styled-table docutils align-default">
+<colgroup>
+<col style="width: 75.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider single-right-divider"><p>条件</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>结论</p></th>
+</tr>
+<tr class="row-even"><th class="head center-align single-left-divider single-right-divider"><p>（关-开）</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>（输出）</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p><img alt="关（0）与 关（0）" src="_images/logic-switches.00.svg" /></p></td>
+<td class="center-align single-left-divider single-right-divider"><p><span class="raw-html"><br></span> 0</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p><img alt="关（0）与 开（1）" src="_images/logic-switches.01.svg" /></p></td>
+<td class="center-align single-left-divider single-right-divider"><p><span class="raw-html"><br></span> 0</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p><img alt="开（1）与 关（0）" src="_images/logic-switches.10.svg" /></p></td>
+<td class="center-align single-left-divider single-right-divider"><p><span class="raw-html"><br></span> 0</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p><img alt="开（1）与 开（1）" src="_images/logic-switches.11.svg" /></p></td>
+<td class="center-align single-left-divider single-right-divider"><p><span class="raw-html"><br></span> 1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>类似地，这些排列组合的数值等价形式如下：</p>
+<div class="center docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>条件（输入）</p></th>
+<th class="head"><p>与</p></th>
+<th class="head"><p>条件（输入）</p></th>
+<th class="head"><p>结论（输出）</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>与</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>与</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>与</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>与</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>数字设计工程师把这些排列表称为真值表。双条件与语句的真值表通常这样给出：</p>
+<div class="center docutils container">
+<p><em>图 1-1. 与功能真值表</em></p>
+<table class="styled-table docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider single-right-divider"><p>A</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>B</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>OUT</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>现在可以推导出或语句和非语句的真值表，它们分别如图 1-2 和图 1-3 所示。</p>
+<div class="center docutils container">
+<p><em>图 1-2. 或功能真值表</em></p>
+<table class="styled-table docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider single-right-divider"><p>A</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>B</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>OUT</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="center docutils container">
+<p><em>图 1-3. 非功能真值表</em></p>
+<table class="styled-table docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider single-right-divider"><p>A</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>OUT</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="b">
+<h2>B. 电子逻辑<a class="headerlink" href="#b" title="链接到此标题。">¶</a></h2>
+<p>三种基本逻辑功能都可以用相对简单的晶体管电路实现。按照惯例，每种电路都被赋予一个符号，以便于设计逻辑系统。这三个符号及其各自的真值表如图 1-4 所示。</p>
+<p><a class="reference internal" href="_images/and-gate.svg"><img alt="与门" src="_images/and-gate.svg" style="width: 32%;" /></a> <a class="reference internal" href="_images/or-gate.svg"><img alt="或门" src="_images/or-gate.svg" style="width: 32%;" /></a> <a class="reference internal" href="_images/not-gate.svg"><img alt="非门" src="_images/not-gate.svg" style="width: 32%;" /></a></p>
+<div class="center docutils container">
+<table class="styled-table docutils align-default" id="id8">
+<caption><span class="caption-text">图 1-4. 三种主要逻辑符号</span><a class="headerlink" href="#id8" title="链接到此表格。">¶</a></caption>
+<colgroup>
+<col style="width: 18.8%" />
+<col style="width: 6.2%" />
+<col style="width: 12.5%" />
+<col style="width: 18.8%" />
+<col style="width: 6.2%" />
+<col style="width: 12.5%" />
+<col style="width: 18.8%" />
+<col style="width: 6.2%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider double-right-divider" colspan="3"><p>与门</p></th>
+<th class="head center-align double-left-divider double-right-divider" colspan="3"><p>或门</p></th>
+<th class="head center-align double-left-divider single-right-divider" colspan="2"><p>非门</p></th>
+</tr>
+<tr class="row-even"><th class="head center-align single-left-divider no-right-divider"><p>A</p></th>
+<th class="head center-align no-left-divider single-right-divider"><p>B</p></th>
+<th class="head center-align single-left-divider double-right-divider"><p>OUT</p></th>
+<th class="head center-align double-left-divider no-right-divider"><p>A</p></th>
+<th class="head center-align no-left-divider single-right-divider"><p>B</p></th>
+<th class="head center-align single-left-divider double-right-divider"><p>OUT</p></th>
+<th class="head center-align double-left-divider no-right-divider"><p>A</p></th>
+<th class="head center-align no-left-divider single-right-divider"><p>OUT</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td class="center-align single-left-divider no-right-divider"><p>0</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider no-right-divider"><p>0</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider no-right-divider"><p>0</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>1</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider no-right-divider"><p>0</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider no-right-divider"><p>0</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider no-right-divider"><p>1</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>0</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider no-right-divider"><p>1</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider no-right-divider"><p>1</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider single-right-divider" colspan="2" rowspan="2"></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider no-right-divider"><p>1</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider no-right-divider"><p>1</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>这三种基本逻辑电路可以相互组合，产生更多的逻辑语句模拟。这些电路组合中有两种使用得如此频繁，以至于被视为基本逻辑电路，并被赋予了各自的逻辑符号和真值表。这两种电路是与非门（NAND，即 NOT-AND）和或非门（NOR，即 NOT-OR）。图 1-5 给出了这些电路的逻辑符号和真值表。</p>
+<p><a class="reference internal" href="_images/nand-gate.svg"><img alt="与门" src="_images/nand-gate.svg" style="width: 32%;" /></a> <a class="reference internal" href="_images/nor-gate.svg"><img alt="或门" src="_images/nor-gate.svg" style="width: 32%;" /></a></p>
+<div class="center docutils container">
+<p><em>图 1-5. 与非门和或非门电路</em></p>
+<table class="styled-table docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 8.3%" />
+<col style="width: 16.7%" />
+<col style="width: 25.0%" />
+<col style="width: 8.3%" />
+<col style="width: 16.7%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider double-right-divider" colspan="3"><p>与非门</p></th>
+<th class="head center-align double-left-divider single-right-divider" colspan="3"><p>或非门</p></th>
+</tr>
+<tr class="row-even"><th class="head center-align single-left-divider no-right-divider"><p>A</p></th>
+<th class="head center-align no-left-divider single-right-divider"><p>B</p></th>
+<th class="head center-align single-left-divider double-right-divider"><p>OUT</p></th>
+<th class="head center-align double-left-divider no-right-divider"><p>A</p></th>
+<th class="head center-align no-left-divider single-right-divider"><p>B</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>OUT</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td class="center-align single-left-divider no-right-divider"><p>0</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider no-right-divider"><p>0</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider no-right-divider"><p>0</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider no-right-divider"><p>0</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider no-right-divider"><p>1</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider no-right-divider"><p>1</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider no-right-divider"><p>1</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider no-right-divider"><p>1</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>三个或更多的逻辑电路构成一个逻辑系统。最基本的逻辑系统之一是如图1-6 所示的异或电路。</p>
+<p><em>图 1-6. 异或电路</em></p>
+<p><img alt="异或（XOR）门 / 半加器" src="_images/half-adder.svg" /></p>
+<div class="center docutils container">
+<table class="styled-table docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider single-right-divider"><p>A</p></th>
+<th class="head center-align single-left-divider double-right-divider"><p>B</p></th>
+<th class="head center-align double-left-divider double-right-divider"><p>A 与 B</p></th>
+<th class="head center-align double-left-divider double-right-divider"><p>非（A 与 B）</p></th>
+<th class="head center-align double-left-divider double-right-divider"><p>A 或 B</p></th>
+<th class="head center-align double-left-divider single-right-divider"><p>（非（A 与 B）与（A 或 B））</p></th>
+</tr>
+<tr class="row-even"><th class="head center-align single-left-divider double-right-divider" colspan="2"></th>
+<th class="head center-align double-left-divider double-right-divider"><p>CARRY</p></th>
+<th class="head center-align double-left-divider double-right-divider" colspan="2"></th>
+<th class="head center-align double-left-divider single-right-divider"><p>OUT 即 SUM</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider single-right-divider"><p>0</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider single-right-divider"><p>1</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider single-right-divider"><p>1</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider single-right-divider"><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>异或电路可用于实现逻辑功能，但也可以用来把两个输入条件相加。由于电子逻辑电路只使用 0 和 1 两个数字单位，它们与只有两个数字的二进制数制兼容。因此，异或电路常被称为二进制加法器。</p>
+<p>只看图 1-6 中的 CARRY 和 SUM 列，把它们合起来看作一个两位二进制数，得到：</p>
+<div class="center docutils container">
+<table class="styled-table docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider single-right-divider"><p>A</p></th>
+<th class="head center-align single-left-divider double-right-divider"><p>B</p></th>
+<th class="head center-align double-left-divider single-right-divider" colspan="3"><p>A + B</p></th>
+</tr>
+<tr class="row-even"><th class="head center-align single-left-divider double-right-divider" colspan="2"></th>
+<th class="head center-align double-left-divider single-right-divider"><p>CARRY</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>SUM</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>RESULT</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>00</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>01</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>0</p></td>
+<td class="center-align double-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>01</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider double-right-divider"><p>1</p></td>
+<td class="center-align double-left-divider single-right-divider"><p>1</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>0</p></td>
+<td class="center-align single-left-divider single-right-divider"><p>10</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>通常，在提及异或（XOR）时，CARRY 被忽略，其图形表示为：</p>
+<p><a class="reference internal" href="_images/xor-gate.svg"><img alt="或门" src="_images/xor-gate.svg" style="width: 32%;" /></a></p>
+<p>逻辑电路的各种组合可用于实现众多电子功能。例如，两个与非门电路可以连接起来，组成一种称为触发器的双稳态电路。由于触发器只有在脉冲形式的输入信号到达时才改变状态，它起着短期存储器元件的作用。若干触发器可以级联在一起，组成电子计数器和存储寄存器。</p>
+<p>其他逻辑电路可以连接在一起，组成单稳态和无稳态电路。单稳态电路除非接收到输入脉冲，否则处于两个状态之一；随后它短暂地处于相反状态，然后恢复正常状态。无稳态电路持续地在两个状态之间来回切换。</p>
+</section>
+<section id="c">
+<h2>C. 数制<a class="headerlink" href="#c" title="链接到此标题。">¶</a></h2>
+<p>早期人类可能因为发现用手指计数很方便，便发明了一种由十个数字组成的数制。然而，数制可以基于任意数量的数字。正如我们已经看到的，双状态电子电路与只含两个数字的数制高度兼容，其数字称为 <strong>位</strong> （ <strong>二进制数字</strong> ）。基于八和十六的数制也与计算机等复杂电子逻辑系统兼容，因为它们为表达冗长的二进制数提供了方便的速记方法。</p>
+</section>
+<section id="d">
+<h2>D. 二进制<a class="headerlink" href="#d" title="链接到此标题。">¶</a></h2>
+<p>与几乎所有数字计算机一样， <em>ALTAIR 8800</em> 的几乎所有操作都以二进制执行。计算机处理的典型二进制数包含 8 位，形如：10111010。像这样的定长二进制数通常称为字或字节，计算机通常被设计为处理和存储固定数量的字（或字节）。</p>
+<p>像 10111010 这样的二进制字在新手看来毫无意义。但由于二进制只使用两个数字（位），它实际上比我们熟悉而传统的十进制系统简单得多。为了弄清原因，让我们推导十进制数 0 到 20 的二进制等价形式。我们只需简单地给每个后继数加 1，直到推导出所有的数。任何数制中的计数都遵循一条基本规则：在列中顺序记录每次计数的数字；当可用数字全部用完时，在第一列的左侧开始新的一列，并继续计数。</p>
+<p>在二进制中从 0 数到 20 非常容易，因为只有两个数字（位）。十进制 0的二进制等价数是 0，十进制 1 的二进制等价数是 1。由于两个可用的位现在都已用完，二进制计数必须引入新的一列，才能构成十进制 2 的二进制等价数，结果是 10。（顺便说一句，不要理会二进制数与十进制数之间任何表面的相似：二进制 10 <strong>不是</strong> 十进制 10！）十进制数 3 的二进制等价数是 11。两位又都用完了，所以必须开始第三列，才能得到十进制数4 的二进制等价数（100）。现在你应该能够继续计数，推导出十进制数 0到 20 的所有其余二进制等价数：</p>
+<div class="center docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>十进制</p></th>
+<th class="head"><p>二进制</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>10</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>11</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>100</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>101</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>110</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>111</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>9</p></td>
+<td><p>1001</p></td>
+</tr>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>1010</p></td>
+</tr>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>1011</p></td>
+</tr>
+<tr class="row-even"><td><p>12</p></td>
+<td><p>1100</p></td>
+</tr>
+<tr class="row-odd"><td><p>13</p></td>
+<td><p>1101</p></td>
+</tr>
+<tr class="row-even"><td><p>14</p></td>
+<td><p>1110</p></td>
+</tr>
+<tr class="row-odd"><td><p>15</p></td>
+<td><p>1111</p></td>
+</tr>
+<tr class="row-even"><td><p>16</p></td>
+<td><p>10000</p></td>
+</tr>
+<tr class="row-odd"><td><p>17</p></td>
+<td><p>10001</p></td>
+</tr>
+<tr class="row-even"><td><p>18</p></td>
+<td><p>10010</p></td>
+</tr>
+<tr class="row-odd"><td><p>19</p></td>
+<td><p>10011</p></td>
+</tr>
+<tr class="row-even"><td><p>20</p></td>
+<td><p>10100</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>10</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>11</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>100</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>101</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>110</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>111</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>9</p></td>
+<td><p>1001</p></td>
+</tr>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>1010</p></td>
+</tr>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>1011</p></td>
+</tr>
+<tr class="row-even"><td><p>12</p></td>
+<td><p>1100</p></td>
+</tr>
+<tr class="row-odd"><td><p>13</p></td>
+<td><p>1101</p></td>
+</tr>
+<tr class="row-even"><td><p>14</p></td>
+<td><p>1110</p></td>
+</tr>
+<tr class="row-odd"><td><p>15</p></td>
+<td><p>1111</p></td>
+</tr>
+<tr class="row-even"><td><p>16</p></td>
+<td><p>10000</p></td>
+</tr>
+<tr class="row-odd"><td><p>17</p></td>
+<td><p>10001</p></td>
+</tr>
+<tr class="row-even"><td><p>18</p></td>
+<td><p>10010</p></td>
+</tr>
+<tr class="row-odd"><td><p>19</p></td>
+<td><p>10011</p></td>
+</tr>
+<tr class="row-even"><td><p>20</p></td>
+<td><p>10100</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>有一个简单的过程可以把二进制数转换成它的十进制等价数。二进制数中的每一位指示该数应当取 2 的多少次幂，这些 2 的幂之和就给出该数的十进制等价数。例如，考虑二进制数 10011：</p>
+<img alt="二进制数 10011 转换为十进制：10011 = [(1×2⁴)+(0×2³)+(0×2²)+(1×2¹)+(1×2⁰)] = [(16)+(0)+(0)+(2)+(1)] = 19" class="align-center" src="_images/bin2dec_formula.svg" />
+</section>
+<section id="e">
+<h2>E. 八进制<a class="headerlink" href="#e" title="链接到此标题。">¶</a></h2>
+<p>由于二进制只有两位，不多久就会积累出一长串 0 和 1。例如，一个六位十进制数需要 19 位。</p>
+<p>冗长的二进制数可以通过把它们分成三位一组、并给每个 3 位组指定十进制等价数来简化。由于最高的 3 位二进制数对应十进制 7，因此有八种 0和 1 的组合（0-7）。</p>
+<p>基本的 <em>ALTAIR 8800</em> 接受二进制输入，装入机器的任何二进制数都可以简化为八进制形式。当然，八进制数必须再转换回二进制才能输入计算机，但由于只涉及八种位模式，这个过程既简单又快速。 <em>ALTAIR 8800</em> 的典型二进制指令是：11101010。该指令可以先从最低有效位开始把数分成三位一组，从而转换为八进制：11 101 010。接下来，给这三个位模式分别指定十进制等价数：</p>
+<div class="center docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>101</p></td>
+<td><p>010</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>5</p></td>
+<td><p>2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>因此，二进制的 11 101 010 对应八进制的 352。为了在本手册其余部分能够快速进行二进制到八进制的转换，大多数二进制数将以三位一组的形式给出。</p>
+</section>
+<section id="f">
+<h2>F. 计算机程序设计<a class="headerlink" href="#f" title="链接到此标题。">¶</a></h2>
+<p>如第 2 部分中将阐明的，计算机的中央处理器（CPU）本质上是一个逻辑电路和系统的网络，其互连或组织可以由用户改变。因此，可以把计算机看作一块 <strong>可变硬件</strong> 。计算机硬件的变化通过一组称为 <strong>软件</strong> 的编程指令来实现。</p>
+<p><em>ALTAIR 8800</em> 的软件指令必须以称为 <strong>机器语言</strong> 的顺序 8 位字的形式装入机器。这种以及其他更高级的计算机语言将在后面讨论。</p>
+<p>计算机程序设计的基础相当简单。事实上，程序设计中最困难的部分往往是定义你希望用计算机解决的问题。下面列出生成程序的三个主要步骤：</p>
+<ol class="arabic simple">
+<li><p>定义问题2. 确定方法3. 编写程序</p></li>
+</ol>
+<p>问题一旦得到定义，就可以制定出求解它的方法。绘制一个展示问题有序、逐步求解的图表可以简化这一步，这种图表称为 <strong>流程图</strong> 。流程图绘好后，各步骤就可以翻译成计算机的语言。这是三个步骤中最容易的一步，因为你只需要对指令有大致的了解，以及一份列出每条指令及其机器语言等价形式的清单。</p>
+<p><em>ALTAIR 8800</em> 具有广泛的程序设计能力。例如，程序可以引起数据在计算机存储器与 CPU 之间传送，甚至可以使计算机做出逻辑判定。例如，如果满足指定条件，计算机可以从程序中一处跳转到任何其他位置，并在新位置继续执行程序。频繁使用的专用程序可以存储在计算机存储器中，供以后由主程序检索和使用，这种专用程序称为子程序。 <em>ALTAIR 8800</em> 的各条指令在本手册第 4 部分中有详细描述。</p>
+</section>
+<section id="g">
+<h2>G. 一个简单程序<a class="headerlink" href="#g" title="链接到此标题。">¶</a></h2>
+<p>假设你希望使用 <em>ALTAIR 8800</em> 把位于两个不同存储单元的两个数相加，并把结果存放到存储器的其他地方。当然这是一个很简单的问题，但它可用来说明几种基本程序设计技术。下面是生成解决该问题的程序所用的步骤：</p>
+<ol class="arabic simple">
+<li><p>定义问题–把存储器中的两个数相加，并把结果存放到存储器的
+其他地方。</p></li>
+<li><p>确定方法–现在可以生成流程图：</p></li>
+</ol>
+<div class="center docutils container">
+<table class="styled-table docutils align-default">
+<tbody>
+<tr class="row-odd"><td class="left-align"><img alt="_images/flowchart-1.svg" src="_images/flowchart-1.svg" />
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>编写程序–起初，把流程图翻译成适合计算机使用的语言或格式
+可能显得复杂。然而，对计算机组织和操作的概要了解会使这项工作变
+得简单。在这种情况下，四部分流程图翻译成五条独立的指令：</p></li>
+</ol>
+<div class="center docutils container">
+<table class="styled-table docutils align-default">
+<tbody>
+<tr class="row-odd"><td class="left-align"><img alt="_images/flowchart-2.svg" src="_images/flowchart-2.svg" />
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>这些指令现在看来可能没有意义，但随着你深入阅读本手册，它们的含义和应用会变得清晰得多。例如，在你了解到计算机必须把从存储器取出的第一个数临时存入一种称为寄存器的特殊 CPU 存储器之后，对额外指令（<code class="docutils literal notranslate"><span class="pre">MOV</span></code>）的需要会变得更加明显。第一个数存放在寄存器中，直到它与第二个数相加。</p>
+</section>
+<section id="h">
+<h2>H. 计算机语言<a class="headerlink" href="#h" title="链接到此标题。">¶</a></h2>
+<p>任何计算机的软件都必须以称为 <strong>机器语言</strong> 的二进制字的形式输入机器。机器语言程序通常借助 <strong>助记符</strong> 编写，这些助记符与各种指令的位模式相对应。例如，10 000 111 是 <em>ALTAIR 8800</em> 的一条加法指令，相应的助记符是 <code class="docutils literal notranslate"><span class="pre">ADD</span> <span class="pre">A</span></code>。显然，助记符 <code class="docutils literal notranslate"><span class="pre">ADD</span> <span class="pre">A</span></code> 比其相应的机器语言位模式容易记得多。</p>
+<p>然而最终，每条指令的机器语言位模式都必须一次一步地输入计算机。有些指令可能需要不止一个二进制字。例如，像 <code class="docutils literal notranslate"><span class="pre">JMP</span></code> 这样引用存储地址的 <em>ALTAIR 8800</em> 指令，需要一个字表示实际指令，两个后续的字表示存储地址。</p>
+<p>机器语言程序通常通过前面板开关输入 <em>ALTAIR 8800</em> 。计算机终端可用来把助记符信号 17 发送给计算机，在那里它由一组称为 <strong>汇编器</strong> 的特殊指令（软件）转换成机器语言。</p>
+<p>一种称为 <strong>编译器</strong> 的高度复杂软件包提供了更大的灵活性，它把高阶助记符转换成机器语言。高阶助记符是一种计算机语言速记方式，用单一且易于识别的助记符自动替换多达十几条甚至更多的机器语言指令。 <strong>FORTRAN</strong> 、 <strong>BASIC</strong> 、 <strong>COBOL</strong> 等高级计算机语言都使用编译器。</p>
+<p>更高级的计算机语言在编写计算机程序时提供了大量简化，尤其是那些冗长的程序；它们也非常容易记忆。然而，机器语言程序设计的潜在通用性不应被低估，而实现更高级语言全部潜力的极好方法，就是学习应用机器语言。</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">第 1 部分：数制、逻辑与程序设计</a><ul>
+<li><a class="reference internal" href="#a">A. 逻辑</a></li>
+<li><a class="reference internal" href="#b">B. 电子逻辑</a></li>
+<li><a class="reference internal" href="#c">C. 数制</a></li>
+<li><a class="reference internal" href="#d">D. 二进制</a></li>
+<li><a class="reference internal" href="#e">E. 八进制</a></li>
+<li><a class="reference internal" href="#f">F. 计算机程序设计</a></li>
+<li><a class="reference internal" href="#g">G. 一个简单程序</a></li>
+<li><a class="reference internal" href="#h">H. 计算机语言</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="part-0.html"
+                          title="Previous page">&larr; 第 0 部分：前言：版本说明、致谢等</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="part-2.html"
+                          title="Next page">&rarr; 第 2 部分：ALTAIR 8800 的组成</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/part-1.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input type="submit" value="提交">
+    </form>
+    </div>
+</div>
+<script src="../_static/restyle_searchbox.js"></script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right loop_first">
+          <a href="genindex.html" title="总索引"
+             >索引</a></li>
+        <li class="right">
+          <a href="part-2.html" title="第 2 部分：ALTAIR 8800 的组成"
+             >下一页</a> &nbsp; &nbsp;</li>
+        <li class="right">
+          <a href="part-0.html" title="第 0 部分：前言：版本说明、致谢等"
+             >上一页</a> &nbsp; &nbsp;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Altair 8800 操作手册 v2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">第 1 部分：数制、逻辑与程序设计</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo" aria-label="footer contentinfo">
+<span class="license-text"
+   prefix="dct: http://purl.org/dc/terms/ cc: http://creativecommons.org/ns#"><a
+   rel="cc:attributionURL"
+   property="dct:title"
+   href="https://ubuntourist.codeberg.page/">Ubuntourist Trap</a>
+&#x1f12f; Copyleft 1975 by
+<a rel="cc:attributionURL dct:creator"
+   property="cc:attributionName"
+   href="https://codeberg.org/ubuntourist/">Kevin Cole</a>
+(<a rel="me"
+    href="https://mastodon.social/@ubuntourist"
+    aria-label="Mastodon profile">Tadonic the Flautulant</a>)
+is licensed under
+<a rel="license"
+   href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0<img
+   class="cc" alt="Creative Commons 4.0 license (CC) "
+   src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img
+   class="cc" alt="with Attribution (BY), "
+   src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><img
+   class="cc" alt="Share Alike (SA)"
+   src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"></a></span>
+      Created using <a href="https://sphinx-doc.org/">Sphinx</a> 9.2.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+.. Inline icon image mappings.
+   Written by Kevin Cole <ubuntourist@hacdc.org> 2022.09.07 (kjc)
+   See <https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#substitution-definitions>
+.. For the Cloud theme the icons appear as...
+       ...Note       is a lightbulb
+       ...Caution    is a white bang in an orange circle
+       ...Danger     is a white X in a red circle
+       ...Deprecated is a ... crumpled wad of paper?
+       ...See also   is a curled yellow arrow
+       ...To do      is a ... yellow jar with a note in it?
+       ...Warning    is a white bang in a red triangle
+
+.. |note|       image:: _static/icon-note.png
+.. |caution|    image:: _static/icon-caution.png
+.. |danger|     image:: _static/icon-danger.png
+.. |deprecated| image:: _static/icon-deprecated.png
+.. |seealso|    image:: _static/icon-seealso.png
+.. |todo|       image:: _static/icon-todo.png
+.. |warning|    image:: _static/icon-warning.png

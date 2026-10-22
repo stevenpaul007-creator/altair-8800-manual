@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Altair 8800 操作手册" />
+<meta property="og:type" content="book" />
+<meta property="og:url" content="https://ubuntourist.codeberg.page/index.html" />
+<meta property="og:site_name" content="Altair 8800 操作手册（2020 版）" />
+<meta property="og:description" content="目录: 第 0 部分：前言：版本说明、致谢等, 第 1 部分：数制、逻辑与程序设计- A. 逻辑, B. 电子逻辑, C. 数制, D. 二进制, E. 八进制, F. 计算机程序设计, G. 一个简单程序, H. 计算机语言., 第..." />
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Altair_8800_and_Model_33_ASR_Teletype_.jpg/1024px-Altair_8800_and_Model_33_ASR_Teletype_.jpg" />
+<meta property="og:image:alt" content="Altair 8800 and Model 33 ASR teletype" />
+<meta name="description" content="目录: 第 0 部分：前言：版本说明、致谢等, 第 1 部分：数制、逻辑与程序设计- A. 逻辑, B. 电子逻辑, C. 数制, D. 二进制, E. 八进制, F. 计算机程序设计, G. 一个简单程序, H. 计算机语言., 第..." />
+<meta property="og:book:release_date" content="2020-09-20">
+<meta property="og:book:author"  content="Kevin Cole">
+<meta property="og:book:tag"     content="altair">
+<meta property="og:book:tag"     content="8800">
+<meta property="og:book:tag"     content="intel">
+<meta property="og:book:tag"     content="assembly language">
+<meta property="og:book:tag"     content="machine code">
+<meta property="og:book:tag"     content="education">
+<meta property="og:image:width"  content="1024">
+<meta property="og:image:height" content="768" >
+<meta property="og:description"  content="机器操作码、架构细节、汇编器与模拟器的安装和使用等文档">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@codeberg_org">
+<meta name="twitter:creator"     content="@ubuntourist">
+<meta name="twitter:title"       content="Altair 8800 Operator's Manual, 2020 Edition">
+<meta name="twitter:description" content="Documentation on machine op codes, architectural details, installation and usage of an assembler and simulator, and more">
+<meta name="twitter:image"       content="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Altair_8800_and_Model_33_ASR_Teletype_.jpg/1024px-Altair_8800_and_Model_33_ASR_Teletype_.jpg">
+
+    <title>Altair 8800 操作手册 &#8212; Altair 8800 操作手册 v2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" type="text/css" href="_static/table_styling.css?v=a1a2a898" />
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/widths.css" type="text/css" />
+    <link rel="stylesheet" href="_static/background.css" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi%7COpen+Sans:400,i,b,bi%7CRoboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="_static/documentation_options.js?v=8ba3eb92"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/translations.js?v=540d3cec"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="icon" href="/images/icon-lightning.svg"/>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="第 0 部分：前言：版本说明、致谢等" href="part-0.html" />
+   
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="me" href="https://musician.social/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://musicians.today/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.social/@ubuntourist"   aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.well.com/@kjcole"      aria-label="Mastodon profile"  />
+  <link rel="me" href="https://social.trom.tf/profile/tadonic" aria-label="Friendica profile" />
+
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right loop_first">
+          <a href="genindex.html" title="总索引"
+             accesskey="I">索引</a></li>
+        <li class="right">
+          <a href="part-0.html" title="第 0 部分：前言：版本说明、致谢等"
+             accesskey="N">下一页</a> &nbsp; &nbsp;</li>
+        <li class="nav-item nav-item-0"><a href="#">Altair 8800 操作手册 v2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Altair 8800 操作手册</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="altair-8800">
+<h1>Altair 8800 操作手册<a class="headerlink" href="#altair-8800" title="链接到此标题。">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">目录</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="part-0.html">第 0 部分：前言：版本说明、致谢等</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part-1.html">第 1 部分：数制、逻辑与程序设计</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="part-1.html#a">A. 逻辑</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-1.html#b">B. 电子逻辑</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-1.html#c">C. 数制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-1.html#d">D. 二进制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-1.html#e">E. 八进制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-1.html#f">F. 计算机程序设计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-1.html#g">G. 一个简单程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-1.html#h">H. 计算机语言</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="part-2.html">第 2 部分：ALTAIR 8800 的组成</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="part-2.html#a-cpu">A. 中央处理器（CPU）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-2.html#b">B. 存储器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-2.html#c">C. 时钟</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-2.html#d">D. 输入/输出</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="part-3.html">第 3 部分：ALTAIR 8800 的操作</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="part-3.html#a-led">A. 前面板开关与 LED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-3.html#b">B. 载入示例程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-3.html#c">C. 存储器的使用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-3.html#d">D. 存储器寻址</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-3.html#e">E. 操作提示</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="part-4.html">第 4 部分：Altair 8800 指令集</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="part-4.html#a">A. 命令指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-4.html#b">B. 单寄存器指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-4.html#c">C. 寄存器对指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-4.html#d">D. 累加器循环移位指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-4.html#e">E. 数据传送指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-4.html#f">F. 立即数指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="part-4.html#g">G. 转移指令</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="appendix.html">附录 A：ALTAIR 8800 指令集</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="appendix.html#a">A. 命令指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appendix.html#b">B. 单寄存器指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appendix.html#c">C. 寄存器对指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appendix.html#d">D. 累加器循环移位指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appendix.html#e">E. 数据传送指令</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appendix.html#g">G. 转移指令</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="linux.html">附录 B：在 Linux 上配置 Altair 8800</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#id1">软件包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#id4">编写、汇编源代码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#id9">在软件模拟器中运行你的程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#minicom">配置 MINICOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#minirc-altair">~/.MINIRC.ALTAIR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#altair">运行实测：在 Altair 克隆机上运行你的程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#makefile">MAKEFILE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#id18">MAKEFILE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#id19">获取输入 / 显示输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#id22">提示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux.html#kermit">Kermit 说明</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="addendum.html">补遗：快进到 2020</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源</a></li>
+<li class="toctree-l1"><a class="reference internal" href="service.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="price-list.html">MITS ALTATR 8800 价目表</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="price-list.html#id1">手册</a></li>
+<li class="toctree-l2"><a class="reference internal" href="price-list.html#id2">邮费与条款</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="id1">
+<h1>索引和表格<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">索引</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">模块索引</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">搜索页面</span></a></p></li>
+</ul>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="#">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Altair 8800 操作手册</a></li>
+<li><a class="reference internal" href="#id1">索引和表格</a></li>
+</ul>
+
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="part-0.html"
+                          title="Next page">&rarr; 第 0 部分：前言：版本说明、致谢等</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input type="submit" value="提交">
+    </form>
+    </div>
+</div>
+<script src="../_static/restyle_searchbox.js"></script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right loop_first">
+          <a href="genindex.html" title="总索引"
+             >索引</a></li>
+        <li class="right">
+          <a href="part-0.html" title="第 0 部分：前言：版本说明、致谢等"
+             >下一页</a> &nbsp; &nbsp;</li>
+        <li class="nav-item nav-item-0"><a href="#">Altair 8800 操作手册 v2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Altair 8800 操作手册</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo" aria-label="footer contentinfo">
+<span class="license-text"
+   prefix="dct: http://purl.org/dc/terms/ cc: http://creativecommons.org/ns#"><a
+   rel="cc:attributionURL"
+   property="dct:title"
+   href="https://ubuntourist.codeberg.page/">Ubuntourist Trap</a>
+&#x1f12f; Copyleft 1975 by
+<a rel="cc:attributionURL dct:creator"
+   property="cc:attributionName"
+   href="https://codeberg.org/ubuntourist/">Kevin Cole</a>
+(<a rel="me"
+    href="https://mastodon.social/@ubuntourist"
+    aria-label="Mastodon profile">Tadonic the Flautulant</a>)
+is licensed under
+<a rel="license"
+   href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0<img
+   class="cc" alt="Creative Commons 4.0 license (CC) "
+   src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img
+   class="cc" alt="with Attribution (BY), "
+   src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><img
+   class="cc" alt="Share Alike (SA)"
+   src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"></a></span>
+      Created using <a href="https://sphinx-doc.org/">Sphinx</a> 9.2.0.
+    </div>
+  </body>
+</html>

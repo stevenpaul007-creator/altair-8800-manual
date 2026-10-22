@@ -1,0 +1,997 @@
+
+
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="第 3 部分：ALTAIR 8800 的操作" />
+<meta property="og:type" content="book" />
+<meta property="og:url" content="https://ubuntourist.codeberg.page/part-3.html" />
+<meta property="og:site_name" content="Altair 8800 操作手册（2020 版）" />
+<meta property="og:description" content="基本型 ALTAIR 8800 通过前面板进行操作。乍一看，25 个拨动开关和 36 个指示及状态 LED 的阵列可能令人困惑。实际上， ALTAIR 8800 的操作非 常直接，大多数用户不到一小时就能学会把程序装入机器并运行它。如..." />
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Altair_8800_and_Model_33_ASR_Teletype_.jpg/1024px-Altair_8800_and_Model_33_ASR_Teletype_.jpg" />
+<meta property="og:image:alt" content="Altair 8800 and Model 33 ASR teletype" />
+<meta name="description" content="基本型 ALTAIR 8800 通过前面板进行操作。乍一看，25 个拨动开关和 36 个指示及状态 LED 的阵列可能令人困惑。实际上， ALTAIR 8800 的操作非 常直接，大多数用户不到一小时就能学会把程序装入机器并运行它。如..." />
+<meta property="og:book:release_date" content="2020-09-20">
+<meta property="og:book:author"  content="Kevin Cole">
+<meta property="og:book:tag"     content="altair">
+<meta property="og:book:tag"     content="8800">
+<meta property="og:book:tag"     content="intel">
+<meta property="og:book:tag"     content="assembly language">
+<meta property="og:book:tag"     content="machine code">
+<meta property="og:book:tag"     content="education">
+<meta property="og:image:width"  content="1024">
+<meta property="og:image:height" content="768" >
+<meta property="og:description"  content="机器操作码、架构细节、汇编器与模拟器的安装和使用等文档">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@codeberg_org">
+<meta name="twitter:creator"     content="@ubuntourist">
+<meta name="twitter:title"       content="Altair 8800 Operator's Manual, 2020 Edition">
+<meta name="twitter:description" content="Documentation on machine op codes, architectural details, installation and usage of an assembler and simulator, and more">
+<meta name="twitter:image"       content="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Altair_8800_and_Model_33_ASR_Teletype_.jpg/1024px-Altair_8800_and_Model_33_ASR_Teletype_.jpg">
+
+    <title>第 3 部分：ALTAIR 8800 的操作 &#8212; Altair 8800 操作手册 v2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" type="text/css" href="_static/table_styling.css?v=a1a2a898" />
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="_static/widths.css" type="text/css" />
+    <link rel="stylesheet" href="_static/background.css" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi%7COpen+Sans:400,i,b,bi%7CRoboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="_static/documentation_options.js?v=8ba3eb92"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/translations.js?v=540d3cec"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="icon" href="/images/icon-lightning.svg"/>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="第 4 部分：Altair 8800 指令集" href="part-4.html" />
+    <link rel="prev" title="第 2 部分：ALTAIR 8800 的组成" href="part-2.html" />
+   
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="me" href="https://musician.social/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://musicians.today/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.social/@ubuntourist"   aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.well.com/@kjcole"      aria-label="Mastodon profile"  />
+  <link rel="me" href="https://social.trom.tf/profile/tadonic" aria-label="Friendica profile" />
+
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right loop_first">
+          <a href="genindex.html" title="总索引"
+             accesskey="I">索引</a></li>
+        <li class="right">
+          <a href="part-4.html" title="第 4 部分：Altair 8800 指令集"
+             accesskey="N">下一页</a> &nbsp; &nbsp;</li>
+        <li class="right">
+          <a href="part-2.html" title="第 2 部分：ALTAIR 8800 的组成"
+             accesskey="P">上一页</a> &nbsp; &nbsp;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Altair 8800 操作手册 v2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">第 3 部分：ALTAIR 8800 的操作</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="altair-8800">
+<h1>第 3 部分：ALTAIR 8800 的操作<a class="headerlink" href="#altair-8800" title="链接到此标题。">¶</a></h1>
+<p>基本型 <em>ALTAIR 8800</em> 通过前面板进行操作。乍一看，25 个拨动开关和 36
+个指示及状态 LED 的阵列可能令人困惑。实际上，<em>ALTAIR 8800</em> 的操作非
+常直接，大多数用户不到一小时就能学会把程序装入机器并运行它。如果你
+是典型用户，你花在开发和编写程序上的时间将远远超过实际操作机器的时
+间。</p>
+<p><em>ALTAIR 8800</em> 操作手册的这一部分介绍前面板开关以及指示和状态 LED 的
+用途和应用。接着把一个示例程序装入机器并运行。随后详细讨论存储器的
+作用和有效使用。最后给出几条操作提示，帮助你编辑和“调试”程序。</p>
+<section id="a-led">
+<h2>A. 前面板开关与 LED<a class="headerlink" href="#a-led" title="链接到此标题。">¶</a></h2>
+<p>尽管前面板包含 25 个拨动开关和 36 个指示及状态 LED，但基本型
+<em>ALTAIR 8800</em> （256 字存储器）的大多数常规操作只需使用 15 个开关并监
+视 16 个 LED 即可完成。下面说明所有开关和 LED 的功能：</p>
+<section id="id1">
+<h3>1. 前面板开关<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h3>
+<dl class="simple">
+<dt><strong>ON-OFF</strong> 开关</dt><dd><p><strong>ON</strong> 位置为计算机接通电源。<strong>OFF</strong> 位置切断电源，同时也会清除
+存储器的内容。</p>
+</dd>
+<dt><strong>STOP-RUN</strong> 开关</dt><dd><p><strong>STOP</strong> 位置停止程序执行。<strong>RUN</strong> 位置执行程序。</p>
+</dd>
+<dt><strong>SINGLE STEP</strong> 开关</dt><dd><p>每拨动一次该开关，就执行一条机器语言指令。一条机器语言指令最多
+可能需要 5 个机器周期。</p>
+</dd>
+<dt><strong>EXAMINE-EXAMINE NEXT</strong> 开关</dt><dd><p><strong>EXAMINE</strong> 位置在 8 个数据 LED 上显示先前通过 <strong>DATA/ADDRESS</strong>
+开关（见下文）装入的任何指定存储地址的内容。<strong>EXAMINE NEXT</strong> 位
+置显示下一个顺序存储地址的内容。每拨动一次 <strong>EXAMINE NEXT</strong>，都
+会显示下一个顺序存储地址的内容。</p>
+</dd>
+<dt><strong>DEPOSIT-DEPOSIT NEXT</strong> 开关</dt><dd><p><strong>DEPOSIT</strong> 位置把装入 8 个 <strong>DATA</strong> 开关的数据字节装入先前指定
+的存储地址。<strong>DEPOSIT NEXT</strong> 位置把装入 8 个 <strong>DATA</strong> 开关的数据
+字节装入下一个顺序存储地址。每拨动一次 <strong>DEPOSIT NEXT</strong>，装入 8
+个 <strong>DATA</strong> 开关的数据字节就会被装入下一个顺序存储地址。在拨动
+<strong>DEPOSIT</strong> 或 <strong>DEPOSIT NEXT</strong> 之前，可以更改装入 8 个
+<strong>DATA</strong> 开关的数据字节。</p>
+</dd>
+<dt><strong>RESET-CLR</strong> 开关</dt><dd><p><strong>RESET</strong> 位置把程序计数器设置为第一个存储地址（0 000 000 000
+000 000）。对于从第一个存储地址开始的程序，<strong>RESET</strong> 提供了一种
+快速有效的方法回到程序的第一步。<strong>CLR</strong> 是用于外部输入/输出设备
+的 <strong>CLEAR</strong> 命令。</p>
+</dd>
+<dt><strong>PROTECT-UNPROTECT</strong> 开关</dt><dd><p><strong>PROTECT</strong> 位置防止存储器内容被更改。<strong>UNPROTECT</strong> 位置允许更改
+存储器的内容。</p>
+</dd>
+<dt><strong>AUX</strong> 开关</dt><dd><p>基本型 <em>ALTAIR 8800</em> 带有两个辅助开关，它们尚未连接到计算机。这
+些开关将与添加到基本机器上的外部设备配合使用。</p>
+</dd>
+<dt><strong>DATA/ADDRESS</strong> 开关</dt><dd><p><strong>DATA</strong> 开关是指定为 7-0 的那些开关。<strong>ADDRESS</strong> 开关是指定为
+15-0 的那些开关。拨动开关处于 <strong>UP</strong> 位置表示 1 位。拨动开关处于
+<strong>DOWN</strong> 位置表示 0 位。在基本型 <em>ALTAIR 8800</em> （256 字存储器）
+中，指定为 8-15 的 <strong>ADDRESS</strong> 开关不使用，输入地址时应将其置
+0。</p>
+</dd>
+</dl>
+</section>
+<section id="led">
+<h3>2. 指示 LED<a class="headerlink" href="#led" title="链接到此标题。">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>机器停止时，点亮的 LED 表示 1 位或指定条件的活动状态；未点亮的
+LED 表示 0 位或非活动状态。但是，在运行程序时，LED 的显示可能
+看起来不正确。</p>
+</div>
+<table class="styled-table docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head left-align single-left-divider no-right-divider"><p>LED</p></th>
+<th class="head center-align no-left-divider single-right-divider"><p>定义</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="left-align single-left-divider no-right-divider"><p><strong>ADDRESS</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p><strong>ADDRESS</strong> LED 是指定为 <strong>A15</strong>-<strong>A0</strong> 的那些。<strong>ADDRESS</strong> LED 上显示的位模式表示所检查
+或装入数据的存储地址。</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider no-right-divider"><p><strong>DATA</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p><strong>DATA</strong> LED 是指定为 <strong>D7</strong>-<strong>DO</strong> 的那些。<strong>DATA</strong> LED 上显示的位模式表示指定存储地
+址中的数据。</p></td>
+</tr>
+<tr class="row-even"><td class="left-align single-left-divider no-right-divider"><p><strong>INTE</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>该 LED 点亮时，表示中断（<strong>INTERRUPT</strong>）已允许。</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider no-right-divider"><p><strong>PROT</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>该 LED 点亮时，表示存储器已处于保护（<strong>PROTECTED</strong>）状态。</p></td>
+</tr>
+<tr class="row-even"><td class="left-align single-left-divider no-right-divider"><p><strong>WAIT</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>该 LED 点亮时，表示 CPU 处于等待（<strong>WAIT</strong>）状态。</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider no-right-divider"><p><strong>HLDA</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>该 LED 点亮时，表示 <strong>HOLD</strong> 已获确认（<strong>ACKNOWLEDGED</strong>）。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id2">
+<h3>3. 状态 LED<a class="headerlink" href="#id2" title="链接到此标题。">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>点亮的 LED 表示指定条件处于活动状态。</p>
+</div>
+<table class="styled-table docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head left-align single-left-divider no-right-divider"><p>LED</p></th>
+<th class="head center-align no-left-divider single-right-divider"><p>定义</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="left-align single-left-divider no-right-divider"><p><strong>MEMR</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>存储器总线将用于存储器读数据。</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider no-right-divider"><p><strong>INP</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>地址总线上含有输入设备的地址。当数据总线处于输入模
+式时，输入数据应放到数据总线上。</p></td>
+</tr>
+<tr class="row-even"><td class="left-align single-left-divider no-right-divider"><p><strong>M1</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>CPU 正在处理一条指令的第一个机器周期。</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider no-right-divider"><p><strong>OUT</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>地址总线上含有输出设备的地址；当 CPU 就绪时，数据总线上将包
+含输出数据。</p></td>
+</tr>
+<tr class="row-even"><td class="left-align single-left-divider no-right-divider"><p><strong>HLTA</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>一条 <strong>HALT</strong> 指令已执行并得到确认。</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider no-right-divider"><p><strong>STACK</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>地址总线上保存着堆栈指针的下压堆栈地址。</p></td>
+</tr>
+<tr class="row-even"><td class="left-align single-left-divider no-right-divider"><p><strong>WO</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>当前机器周期将执行 <strong>WRITE</strong> 存储器或 <strong>OUTPUT</strong> 功能。否
+则，将执行 <strong>READ</strong> 存储器或 <strong>INPUT</strong> 操作。</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider no-right-divider"><p><strong>INT</strong></p></td>
+<td class="left-align no-left-divider single-right-divider"><p>一个 <strong>INTERRUPT</strong> 请求已被确认。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="b">
+<h2>B. 载入示例程序<a class="headerlink" href="#b" title="链接到此标题。">¶</a></h2>
+<p>第 1 部分 G 节介绍了一个用机器语言助记符编写的简单加法程序。该程序
+旨在从存储器中取出两个数，把它们相加，并把结果存入存储器。用助记符
+形式表示，该程序可以这样写：</p>
+<ol class="arabic simple" start="0">
+<li><p><code class="docutils literal notranslate"><span class="pre">LDA</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MOV</span></code> (A→B)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LDA</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ADD</span></code> (A+B)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STA</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">JMP</span></code></p></li>
+</ol>
+<p><em>ALTAIR 8800</em> 全部 78 条指令的助记符在本手册第 4 部分中有详细说
+明。目前，以下定义已经足够：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LDA</span></code>–把指定存储地址的内容装入累加器。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MOV</span></code> (A→B)–把累加器的内容传送到寄存器 B。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ADD</span></code> (B+A)–把寄存器 B 的内容加到累加器的内容上，并
+把结果存入累加器。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STA</span></code>–把累加器的内容存入指定的存储地址。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">JMP</span></code>–跳转到程序的第一步。 <img alt="note" src="_images/icon-note.png" /></p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>计算机执行完程序后，会在存储器中寻找其他可做的事情。为了保持对
+CPU 的控制，我们可以用一条 <code class="docutils literal notranslate"><span class="pre">JMP</span></code> 指令（后跟第一条指令的存储地
+址）来结束示例程序。计算机将“跳转”回示例程序的第一条指令，一遍
+又一遍地执行该程序。</p>
+</div>
+<p>注意这些指令每一条是多么精确和具体。计算机被 <strong>确切地</strong> 告知如何解
+决问题以及把结果放到哪里。这些机器语言指令每条都需要一个单字节位
+模式来实现基本指令。<code class="docutils literal notranslate"><span class="pre">LDA</span></code> 和 <code class="docutils literal notranslate"><span class="pre">STA</span></code> 还需要两个额外字节来提供必
+要的存储地址。</p>
+<p>要把这个程序装入 <em>ALTAIR 8800</em>，必须先确定两个待相加的数、结果以
+及程序本身的存储地址。在大多数情况下，从第一个存储地址（0）开始存
+放新程序会更方便。因此，数据（两个待相加的数和结果）的存储地址应放
+在存储器中较高的任意地址上。由于基本型 <em>ALTAIR 8800</em> 有 256 字存储
+器，我们选择从存储地址 128 开始存放数据。第一个加数放在存储地址
+128（10 000 000），第二个加数放在存储地址 129（10 000 001），结果放
+在存储地址 130（10 000 010）。存储地址确定后，就可以把程序转换成它
+的机器语言位模式了：</p>
+<table class="styled-table docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head left-align single-left-divider no-right-divider"><p>助记符</p></th>
+<th class="head center-align no-left-divider no-right-divider"><p>位模式</p></th>
+<th class="head center-align no-left-divider single-right-divider"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="left-align single-left-divider no-right-divider"><p>LDA</p></td>
+<td class="center-align no-left-divider no-right-divider"><div class="line-block">
+<div class="line">00 111 010</div>
+<div class="line">10 000 000</div>
+<div class="line">00 000 000</div>
+</div>
+</td>
+<td class="left-align no-left-divider single-right-divider"><div class="line-block">
+<div class="line">把以下位置的内容装入累加器：</div>
+<div class="line">存储地址 128</div>
+<div class="line">（存储地址需要 2 个字节）</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider no-right-divider"><p>MOV (A→B)</p></td>
+<td class="center-align no-left-divider no-right-divider"><div class="line-block">
+<div class="line">01 000 111</div>
+</div>
+</td>
+<td class="left-align no-left-divider single-right-divider"><p>把累加器的内容传送到寄存器 B</p></td>
+</tr>
+<tr class="row-even"><td class="left-align single-left-divider no-right-divider"><p>LDA</p></td>
+<td class="center-align no-left-divider no-right-divider"><div class="line-block">
+<div class="line">00 111 010</div>
+<div class="line">10 000 001</div>
+<div class="line">00 000 000</div>
+</div>
+</td>
+<td class="left-align no-left-divider single-right-divider"><div class="line-block">
+<div class="line">把以下位置的内容装入累加器：</div>
+<div class="line">存储地址 129</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider no-right-divider"><p>ADD (B+A)</p></td>
+<td class="center-align no-left-divider no-right-divider"><div class="line-block">
+<div class="line">10 000 000</div>
+</div>
+</td>
+<td class="left-align no-left-divider single-right-divider"><p>把寄存器 B 的内容加到累加器</p></td>
+</tr>
+<tr class="row-even"><td class="left-align single-left-divider no-right-divider"><p>STA</p></td>
+<td class="center-align no-left-divider no-right-divider"><div class="line-block">
+<div class="line">00 110 010</div>
+<div class="line">10 000 010</div>
+<div class="line">00 000 000</div>
+</div>
+</td>
+<td class="left-align no-left-divider single-right-divider"><div class="line-block">
+<div class="line">把累加器的内容存入：</div>
+<div class="line">存储地址 130</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider no-right-divider"><p>JMP</p></td>
+<td class="center-align no-left-divider no-right-divider"><div class="line-block">
+<div class="line">11 000 011</div>
+<div class="line">00 000 000</div>
+<div class="line">00 000 000</div>
+</div>
+</td>
+<td class="left-align no-left-divider single-right-divider"><div class="line-block">
+<div class="line">跳转到：</div>
+<div class="line">存储单元 0</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>通常，机器语言程序的各个位模式会按顺序编号，以减少把它们输入计算机
+时出错的可能性。此外，由于用前面板开关装入八进制数非常容易，通常还
+会给出每个位模式的八进制等价值。所需要做的只是记住十进制数 0-7 的二
+进制/八进制等价值。得到的程序可以这样表示：</p>
+<table class="styled-table docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider no-right-divider"><p>步骤</p></th>
+<th class="head left-align no-left-divider no-right-divider"><p>助记符</p></th>
+<th class="head center-align no-left-divider no-right-divider"><p>位模式</p></th>
+<th class="head center-align no-left-divider single-right-divider"><p>八进制等价值</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"><p>0</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>LDA</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>00 111 010</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>072</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>1</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>（地址）</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>10 000 000</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>200</p></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"><p>2</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>（地址）</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>00 000 000</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>000</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>3</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>MOV (A→B)</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>01 000 111</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>107</p></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"><p>4</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>LDA</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>00 111 010</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>072</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>5</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>（地址）</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>10 000 001</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>201</p></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"><p>6</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>（地址）</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>00 000 000</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>000</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>7</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>ADD (B+A)</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>10 000 000</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>200</p></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"><p>8</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>STA</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>00 110 010</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>062</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>9</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>（地址）</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>10 000 010</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>202</p></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"><p>10</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>（地址）</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>00 000 000</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>000</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>11</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>JMP</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>11 000 011</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>303</p></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"><p>12</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>（地址）</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>00 000 000</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>000</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>13</p></td>
+<td class="left-align no-left-divider no-right-divider"><p>（地址）</p></td>
+<td class="center-align no-left-divider no-right-divider"><p>00 000 000</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>000</p></td>
+</tr>
+</tbody>
+</table>
+<p>现在可以用前面板开关把程序输入计算机了。要从第一个存储地址（0）开
+始装入程序，请拨动 <strong>RESET</strong> 开关。程序计数器随即装入第一个存储地
+址。然后一步一步地把程序输入 <strong>DATA/ADDRESS</strong> 开关 7-0。第一步输入
+后，拨动 <strong>DEPOSIT</strong> 开关，把位模式装入存储器。接着把第二步输入
+<strong>DATA/ADDRESS</strong> 开关，并拨动 <strong>DEPOSIT NEXT</strong> 开关。位模式将自动装
+入下一个顺序存储地址（1）。继续把各步骤输入前面板开关并拨动
+<strong>DEPOSIT NEXT</strong>。完整的程序装入过程可以总结如下：</p>
+<table class="styled-table docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider no-right-divider"><p>步骤</p></th>
+<th class="head center-align no-left-divider single-right-divider"><p>开关 0-7</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>控制开关</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>RESET</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>0</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>00 111 010</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>1</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>10 000 000</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>2</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>00 000 000</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>3</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>01 000 111</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>4</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>00 111 010</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>5</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>10 000 001</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>6</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>00 000 000</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>7</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>10 000 000</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>8</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>00 110 010</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>9</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>10 000 010</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>10</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>00 000 000</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>11</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>11 000 011</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>12</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>00 000 000</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+<tr class="row-odd"><td class="right-align single-left-divider no-right-divider"><p>13</p></td>
+<td class="center-align no-left-divider single-right-divider"><p>00 000 000</p></td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="right-align single-left-divider no-right-divider"></td>
+<td class="center-align no-left-divider single-right-divider"></td>
+<td class="left-align single-left-divider single-right-divider"><p>DEPOSIT NEXT</p></td>
+</tr>
+</tbody>
+</table>
+<p>程序现在可以运行了，但首先必须在两个待相加的存储地址中存入数据。要
+装入第一个地址，把 <strong>DATA/ADDRESS</strong> 开关设置为 10 000 000 并拨动
+<strong>EXAMINE</strong>。现在可以通过相应设置 <strong>DATA/ADDRESS</strong> 开关，把任何期
+望的数值装入该地址。数值装入开关后，拨动 <strong>DEPOSIT</strong> 把它装入存储
+器。要装入下一个地址，在 <strong>DATA/ADDRESS</strong> 开关上输入第二个数并拨动
+<strong>DEPOSIT NEXT</strong>。由于选择的是顺序存储地址，该数将自动装入正确的地
+址（10 000 001）。如果选择的是非顺序存储地址，则必须遵循查找第一个
+地址的过程（把地址装入 <strong>DATA/ADDRESS</strong> 开关并拨动 <strong>EXAMINE</strong>；然
+后把数值装入 <strong>DATA/ADDRESS</strong> 开关并拨动 DEPOSIT）。</p>
+<p>现在程序引用的两个存储地址已经装入了两个待相加的数，可以运行程序
+了。这只需拨动 <strong>RESET</strong> 开关，然后再拨动 <strong>RUN</strong> 开关即可。稍等片
+刻，然后拨动 <strong>STOP</strong> 开关。要查看存入存储器的结果，先用
+<strong>DATA/ADDRESS</strong> 开关设置结果所在地址的位模式（10 000 010），然后
+拨动 <strong>EXAMINE</strong> 开关。结果就会显示在 <strong>DATA</strong> LED 上。</p>
+<p>要检验自己装入和运行这个程序的能力，请尝试更改两个加数和结果的存储
+地址，然后再次装入并运行该程序。</p>
+<table class="styled-table docutils align-default" id="id4">
+<caption><span class="caption-text">二进制乘法示例程序</span><a class="headerlink" href="#id4" title="链接到此表格。">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head center-align single-left-divider single-right-divider"><p>地址</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>助记符</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>八进制
+代码</p></th>
+<th class="head center-align single-left-divider single-right-divider"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">000</div>
+<div class="line">001</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>MVIA</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">076</div>
+<div class="line">002</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>乘数送入 A 寄存器</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">002</div>
+<div class="line">003</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>MVID</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">026</div>
+<div class="line">003</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>被乘数送入 D、E 寄存器</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">004</div>
+<div class="line">005</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>MVIE</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">036</div>
+<div class="line">000</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">006</div>
+<div class="line">007</div>
+<div class="line">010</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>LXIH</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">041</div>
+<div class="line">000</div>
+<div class="line">000</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>清零 H、L 寄存器以初始化部分积</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">011</div>
+<div class="line">012</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>MVIB</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">006</div>
+<div class="line">010</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>迭代次数送入 B 寄存器</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">013</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>DADH</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">051</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>部分积连同进位左移</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">014</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>RAL</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">027</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>乘数位移入进位位</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">015</div>
+<div class="line">016</div>
+<div class="line">017</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>JNC</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">322</div>
+<div class="line">023</div>
+<div class="line">000</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>在进位位处测试乘数</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">020</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>DADD</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">031</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">若进位位 =1，把被乘数</div>
+<div class="line">加到部分积上</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">021</div>
+<div class="line">022</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>ACI</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">316</div>
+<div class="line">000</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">023</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>DCRB</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">005</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>递减迭代计数器</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">024</div>
+<div class="line">025</div>
+<div class="line">026</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>JNZ</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">302</div>
+<div class="line">013</div>
+<div class="line">000</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>检查迭代次数</p></td>
+</tr>
+<tr class="row-even"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">027</div>
+<div class="line">030</div>
+<div class="line">031</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>SHLD</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">042</div>
+<div class="line">100</div>
+<div class="line">000</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>把结果存入存储单元 100、101</p></td>
+</tr>
+<tr class="row-odd"><td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">032</div>
+<div class="line">033</div>
+<div class="line">034</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>JMP</p></td>
+<td class="center-align single-left-divider single-right-divider"><div class="line-block">
+<div class="line">303</div>
+<div class="line">000</div>
+<div class="line">000</div>
+</div>
+</td>
+<td class="left-align single-left-divider single-right-divider"><p>重新启动</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="c">
+<h2>C. 存储器的使用<a class="headerlink" href="#c" title="链接到此标题。">¶</a></h2>
+<p>到现在应该很清楚，存储器在计算机的高效运行中起着至关重要的作
+用。高级语言编译器通常带有一个软件包，自动跟踪各个存储地址。然
+而，机器语言操作要求程序员自己跟踪存储器。否则，宝贵的数据或程序
+指令可能会被意外擦除，或被其他数据或指令替换。</p>
+<p>可以通过一种称为 <strong>存储器映射</strong> 的简单技术来跟踪 <em>ALTAIR 8800</em> 存储
+器中存放的内容。这种技术只是把各种类型的数据分配给为特定目的保留
+的特定存储块。该技术能有效地把可用存储器组织成一个高效且易于访问
+的存储介质。</p>
+<p>对于拥有 256 字存储器的 <em>ALTAIR 8800</em>，典型的存储器映射可能把前
+100 字分配给程序，第二个 100 字分配给子程序，剩下的 56 字分配给数
+据。当然，各个存储块可以随意修改，存储器映射的主要目的是对可用存
+储器进行有组织的统一规划。</p>
+<p>每次更改 <em>ALTAIR 8800</em> 中的程序时，都可以制作一份存储器映射。程序
+写好后，决定应为程序本身、子程序（如果有）和数据保留多少存储空
+间。然后制作一个表格或图表，记录各项内容存放在存储器的什么位置。
+存储器组织更改时，务必更新该表格。</p>
+</section>
+<section id="d">
+<h2>D. 存储器寻址<a class="headerlink" href="#d" title="链接到此标题。">¶</a></h2>
+<p><em>ALTAIR 8800</em> 的机器语言指令集提供了多种存储器寻址方式，包括直接
+寻址、寄存器对寻址、堆栈指针寻址、立即寻址以及子程序的堆栈寻
+址。下面介绍这几种寻址方式。</p>
+<ol class="arabic simple">
+<li><p><strong>直接寻址</strong>–指令以两个字节的形式提供指定的存储地址，这
+两个字节紧跟在实际指令字节之后。</p></li>
+<li><p><strong>寄存器对寻址</strong>–寄存器对的内容可以存放存储地址。在大多
+数指令中，必须为此使用 <code class="docutils literal notranslate"><span class="pre">H</span></code> 和 <code class="docutils literal notranslate"><span class="pre">L</span></code> 寄存器。<code class="docutils literal notranslate"><span class="pre">H</span></code> 寄存器存放最
+高有效 8 位，<code class="docutils literal notranslate"><span class="pre">L</span></code> 寄存器存放最低有效 8 位（<code class="docutils literal notranslate"><span class="pre">H</span></code> 为 <strong>高</strong>，
+<code class="docutils literal notranslate"><span class="pre">L</span></code> 为 <strong>低</strong>）。两条指令（<code class="docutils literal notranslate"><span class="pre">STAX</span></code> 和 <code class="docutils literal notranslate"><span class="pre">LDAX</span></code>）允许 <code class="docutils literal notranslate"><span class="pre">B</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">C</span></code> 或 <code class="docutils literal notranslate"><span class="pre">D</span></code> 和 <code class="docutils literal notranslate"><span class="pre">E</span></code> 寄存器对存放存储地址。</p></li>
+<li><p><strong>堆栈指针寻址</strong>–堆栈操作只有两种：<code class="docutils literal notranslate"><span class="pre">PUSH</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">POP</span></code>。把数据 PUSH 到堆栈上，会把两个字节（16 位）数据存入程
+序员保留的、称为堆栈的特定存储块。从堆栈中 POP 数据则会取出这些
+数据。<code class="docutils literal notranslate"><span class="pre">PUSH</span></code> 和 <code class="docutils literal notranslate"><span class="pre">POP</span></code> 指令在本手册 <a class="reference external" href="part-4.html">第 4 部分</a> 中有详细说
+明。目前必须知道的是，程序员 <strong>必须</strong> 通过把存储地址装入堆栈指针
+来保留存储器中的堆栈位置。这通过 <code class="docutils literal notranslate"><span class="pre">LXI</span></code> 指令实现（见
+<a class="reference external" href="part-4.html">第 4 部分</a>）。程序员应始终在自己的存储器映射上记下堆栈的地
+址。</p></li>
+<li><p><strong>立即寻址</strong>–立即寻址指令包含在程序装入期间装入存储器的
+数据。由于数据与程序一起按顺序装入，它存放在操作者为程序保留的
+存储块中。装入立即数时无需更改存储器映射。</p></li>
+<li><p><strong>子程序的堆栈寻址</strong>–当程序调用（CALL）一个子程序时，主
+程序中下一条顺序指令的地址会自动地通过压入（PUSH）堆栈保存。子
+程序执行完毕后，RETURN 指令从堆栈弹出（POP）该地址，主程序继续
+执行。</p></li>
+</ol>
+</section>
+<section id="e">
+<h2>E. 操作提示<a class="headerlink" href="#e" title="链接到此标题。">¶</a></h2>
+<p>随着你对 <em>ALTAIR 8800</em> 操作经验的积累，你会想出一些方法来提高程序
+的效率和计算机的运行水平。下面列出了几条有用的提示，在学习操作这
+台机器时你会发现它们非常有用。</p>
+<ol class="arabic simple">
+<li><p><strong>校对程序</strong>–为了安全起见，程序输入计算机后一定要进行校
+对。方法是回到程序开始的第一个存储地址（如果程序从存储单元 0 开
+始，拨动 <strong>RESET</strong>；否则在 <strong>ADDRESS</strong> 开关上设置地址并拨动
+<strong>EXAMINE</strong>），检查 <strong>DATA</strong> LED，确认第一步程序已正确输入。然
+后拨动 <strong>EXAMINE NEXT</strong>，对照 <strong>DATA</strong> LED 检查第二步。以这种方
+式继续校对，直到检查完整个程序。如果发现错误，只需在 <strong>DATA</strong> 开
+关上重新输入正确的位模式，拨动 <strong>DEPOSIT</strong>，然后继续用
+<strong>EXAMINE NEXT</strong> 开关进行校对。</p></li>
+<li><p><strong>使用 NOP</strong>–<code class="docutils literal notranslate"><span class="pre">NOP</span></code> 是一条指定“无操作”的指令，看起来没
+什么价值。但是，如果在复杂程序中散布 <code class="docutils literal notranslate"><span class="pre">NOP</span></code> 指令，那么当发现需
+要添加新步骤的程序错误时，可以节省大量时间。在程序校对期间，只
+需把新指令或数据输入到 <code class="docutils literal notranslate"><span class="pre">NOP</span></code> 指令的位置上即可。如果觉得某条新
+指令可能是必要的，务必使用适当数量的 <code class="docutils literal notranslate"><span class="pre">NOP</span></code>。例如，如果你认为
+程序执行不正常时可能需要添加一条 <code class="docutils literal notranslate"><span class="pre">LDA</span></code> 指令，就在需要的位置连
+续使用三条 <code class="docutils literal notranslate"><span class="pre">NOP</span></code>。需要三条 <code class="docutils literal notranslate"><span class="pre">NOP</span></code> 是因为 <code class="docutils literal notranslate"><span class="pre">LDA</span></code> 指令需要三
+个独立的字节。</p></li>
+<li><p><strong>调试程序</strong>–有时需要对程序进行“调试”。当程序因错误
+（bug）而无法正常执行时，就需要调试。使用 <strong>SINGLE STEP</strong> 开关可
+以帮助调试。该开关让计算机按机器周期（而不是完整的程序步骤）步
+进执行程序，使你能观察 8 个 <strong>STATUS</strong> LED 的状态。这个过程能让
+你发现非法输入、程序组织不当以及其他编程错误。</p></li>
+</ol>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">第 3 部分：ALTAIR 8800 的操作</a><ul>
+<li><a class="reference internal" href="#a-led">A. 前面板开关与 LED</a><ul>
+<li><a class="reference internal" href="#id1">1. 前面板开关</a></li>
+<li><a class="reference internal" href="#led">2. 指示 LED</a></li>
+<li><a class="reference internal" href="#id2">3. 状态 LED</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#b">B. 载入示例程序</a></li>
+<li><a class="reference internal" href="#c">C. 存储器的使用</a></li>
+<li><a class="reference internal" href="#d">D. 存储器寻址</a></li>
+<li><a class="reference internal" href="#e">E. 操作提示</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="part-2.html"
+                          title="Previous page">&larr; 第 2 部分：ALTAIR 8800 的组成</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="part-4.html"
+                          title="Next page">&rarr; 第 4 部分：Altair 8800 指令集</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/part-3.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input type="submit" value="提交">
+    </form>
+    </div>
+</div>
+<script src="../_static/restyle_searchbox.js"></script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>导航</h3>
+      <ul>
+        <li class="right loop_first">
+          <a href="genindex.html" title="总索引"
+             >索引</a></li>
+        <li class="right">
+          <a href="part-4.html" title="第 4 部分：Altair 8800 指令集"
+             >下一页</a> &nbsp; &nbsp;</li>
+        <li class="right">
+          <a href="part-2.html" title="第 2 部分：ALTAIR 8800 的组成"
+             >上一页</a> &nbsp; &nbsp;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Altair 8800 操作手册 v2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">第 3 部分：ALTAIR 8800 的操作</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo" aria-label="footer contentinfo">
+<span class="license-text"
+   prefix="dct: http://purl.org/dc/terms/ cc: http://creativecommons.org/ns#"><a
+   rel="cc:attributionURL"
+   property="dct:title"
+   href="https://ubuntourist.codeberg.page/">Ubuntourist Trap</a>
+&#x1f12f; Copyleft 1975 by
+<a rel="cc:attributionURL dct:creator"
+   property="cc:attributionName"
+   href="https://codeberg.org/ubuntourist/">Kevin Cole</a>
+(<a rel="me"
+    href="https://mastodon.social/@ubuntourist"
+    aria-label="Mastodon profile">Tadonic the Flautulant</a>)
+is licensed under
+<a rel="license"
+   href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0<img
+   class="cc" alt="Creative Commons 4.0 license (CC) "
+   src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img
+   class="cc" alt="with Attribution (BY), "
+   src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><img
+   class="cc" alt="Share Alike (SA)"
+   src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"></a></span>
+      Created using <a href="https://sphinx-doc.org/">Sphinx</a> 9.2.0.
+    </div>
+  </body>
+</html>
