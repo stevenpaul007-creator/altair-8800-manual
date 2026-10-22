@@ -1,0 +1,11 @@
+# Written by Kevin Cole <ubuntourist@hacdc.org> 2020.10.19 (kjc)
+# Custom udev rules
+#
+
+# Create a symlink ALTAIR for the Prolific Technology USB-Serial Controller
+# (idVendor=067b, idProduct=2303)
+#
+
+SUBSYSTEMS=="usb",                 \
+    ATTRS{serial}=="0000:00:1d.0", \
+    SYMLINK+="ALTAIR"

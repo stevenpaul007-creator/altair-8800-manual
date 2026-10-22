@@ -1,0 +1,14 @@
+/***********************************************************************
+ * 2026.08.10 KJC - Use "The Session" background color.                *
+ * 2026.08.10 KJC - Scale musical score SVGs to fill width.            *
+ ***********************************************************************/
+
+div.body {
+    background-color: #FFFFEA !important;
+}
+
+img#score {
+    display: block;
+    width: 100%;
+    height: auto;
+}

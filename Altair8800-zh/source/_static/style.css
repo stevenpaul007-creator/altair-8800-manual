@@ -1,0 +1,94 @@
+div.leftside {
+    width: 414px;
+    padding: 0px 3px 0px 0px;
+    float: left;
+}
+
+div.rightside {
+    margin-left: 425px;
+}
+
+div.center {
+    text-align: center;
+}
+
+div.left {
+    text-align: left;
+}
+
+div.right {
+    text-align: right;
+}
+
+div.center > table {
+    margin-left:  auto;
+    margin-right: auto;
+}
+
+div.tight pre {
+    line-height: 1;
+}
+
+.obscure > h1 {
+    display: none;
+}
+
+audio {
+    width: 100%;
+}
+
+video {
+    width: 100%;
+    height: auto;
+}
+
+.embiggen {
+    font-size: 200%;
+    vertical-align: sub;
+}
+
+#searchbox {
+    display: none;
+}
+
+img.cc {
+    height:22px!important;
+    margin-left:3px;
+    vertical-align:text-bottom;
+}
+
+img.math {
+    vertical-align: 0px;
+}
+
+.related > .loop_first {
+    margin-right: 10px;
+}
+
+table.genindextable {
+    width: 100%;
+}
+
+table.genindextable td {
+    width: 33%;
+    vertical-align: top;
+}
+
+#search-progress {
+    padding-left: 10px;
+}
+
+#CPU {
+    width: 95vw;
+    height: 95vh;
+}
+
+/* CJK font fallbacks (Chinese translation) */
+body {
+    font-family: "Noticia Text", "Noto Sans SC", "PingFang SC",
+                 "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+
+code, pre, .linenos, .highlight {
+    font-family: "Roboto Mono", "Noto Sans Mono CJK SC", monospace;
+}

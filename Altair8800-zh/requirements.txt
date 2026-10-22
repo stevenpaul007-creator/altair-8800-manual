@@ -1,0 +1,8 @@
+# Python package (pip) requirements as of 2020.09.02
+#
+
+sphinx               # Sphinx reStructuredText (ReST) processor
+cloud-sptheme        # Cloud theme for Sphinx
+sphinx-simplepdf      # Simple PDF builder for Sphinx
+sphinxext-opengraph   # OpenGraph meta tags
+jieba                 # Chinese word segmentation for zh_CN search

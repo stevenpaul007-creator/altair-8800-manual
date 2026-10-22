@@ -1,0 +1,959 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                 DMF-80/ST 1.0
+                          [Device Management Facility]
+                          [For 8080 family processors]
+                          [Single Task - Version 1.0]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                      1980
+                                 Dave Dunfield
+
+
+
+                                      DMF-80/ST
+
+                                  TABLE OF CONTENTS
+
+
+                                                                            Page
+
+        1. DOS COMMANDS                                                        1
+
+
+        2. COMMAND MODE                                                        5
+
+
+        3. DISK DIRECTORY                                                      5
+
+
+        4. RETURN CODES                                                        5
+
+
+        5. BOOTSTRAP (IPL)                                                     6
+
+
+        6. DISK SUBSYSTEM                                                      6
+
+
+        7. SUPERVISOR CALLS                                                    7
+
+
+        8. INTERFACING TO USER PROGRAMS                                       10
+
+           8.1 Parameter Passing                                              10
+           8.2 Program Termination                                            10
+
+        9. UTILITIES                                                          11
+
+           9.1 DISKUTIL - Functions for diskette maintenance                  11
+           9.2 TYPE - Display file on console                                 11
+           9.3 RENAME - Rename a file                                         11
+           9.4 @ - Command File Interpreter                                   12
+           9.5 NSTAR - North Star DOS emulator                                15
+           9.6 BGND - Start/Stop background processing                        16
+
+        10. DMF MEMORY LAYOUT                                                 17
+
+           10.1 Disk layout                                                   17
+           10.2 Memory layout                                                 17
+           10.3 Entry points                                                  17
+           10.4 Customizing console I/O functions                             18
+    DMF-80/ST                                                        Page: 1
+
+
+    1. DOS COMMANDS
+
+       Operands to commands are as follows:
+
+            <filename>    - A name of a file including the extension
+                            optionally followed by a comma and a disk
+                            drive number. Drive 1 is assumed if the
+                            drive number is not given.
+                                eg: TESTFILE.DAT
+                                    TESTRUN,2
+
+            <objname>     - The name of an executable object file.
+                            eg: BASIC
+                                TESTRUN,2
+
+            <drive>       - A disk drive number from 1 to 3
+
+            <diskadr>     - A disk sector address (0-349) in decimal.
+
+            <filsize>     - A file size (0-255) in decimal.
+
+            <ramadr>      - A memory address (0-FFFF) in hex.
+
+       Operands shown in [] are optional.
+
+       CReate <filename> <filesize> [diskadr]              - For NON .OBJ
+       CReate <filename> <filesize> <ramadr> [diskadr]     - For .OBJ files
+
+          Creates the file <filename>,  making it <filsize> blocks in size.  If
+          <dskadr>  is given,  locates it at that sector address on  the  disk,
+          otherwise it is located at the next  available  block  following  the
+          last file on the disk.
+
+          If filetype is .OBJ,  then  <ramadr>  is expected,  and  defines  the
+          memory address where the content of  the  file  will  be  loaded  and
+          executed in response to a RUN command.
+
+
+       DELete <filename> [Y]
+
+          Deletes the  file  <filename>.  If  <filename>  contains  '*'s,  then
+          prompts for each file to be deleted.  If you reply "Y" to the prompt,
+          then the file will be deleted.  If you reply "N",  then the file will
+          NOT be deleted.  If you reply "Q", then the file will not be deleted,
+          and no more files will be prompted for.  If you type CONTROL-C,  then
+          NONE of the files will be deleted  (even  if  you  replied  "Y"  when
+          prompted for them).  If the optional "Y"  parameter is supplied,  the
+          all matching files will be deleted without prompts.
+       DMF-80/ST                                                        Page: 2
+
+
+       DIRect <filename> or <drive>
+
+          Lists the disk directory.  If  <filename>  is given,  then lists only
+          matching files.  <filename> may include the character "*" which means
+          "anything".
+
+           eg: DIR *.*         - All files on drive 1
+               DIR *.obj,2     - .OBJ files only on drive 2
+               DIR A*.*        - Files starting with "A" on drive 1
+
+          If a drive number is given,  list entire directory on that drive.  If
+          no operands are given, lists entire directory on drive 1.
+
+           eg: DIR             - All files on drive 1
+               DIR 2           - All files on drive 2
+
+          Listing produced is in the following format:
+
+           <name>  <type>  <address>   <size>  [ramadr]
+
+           where:
+               <name>      is the file name
+               <type>      is the file extension
+               <address>   is the starting disk sector address
+               <size>      is the size in disk blocks
+               [ramadr]    Is the run address (.OBJ files only)
+
+           eg: DOS     .SYS   04   10
+               BASIC   .OBJ   14   12  0100
+               EDIT    .OBJ   26   12  0100
+               EDIT    .ASM   38  100
+
+
+       JUmp <ramadr> [user operands]
+
+          Jumps to the address <ramadr>  starting execution.  F-E register pair
+          will point to the rest of the command line (terminated by CR  (0Dh)),
+          allowing the program to receive operands.
+
+           eg: JMP 0100
+               JMP 0100 1000
+
+
+       LOad <filename> <ramadr>
+
+          Loads the file <filename> into memory at <ramadr>.
+
+           eg: LOAD EDIT.OBJ 5F00
+
+       SAve <filename> <ramadr>
+
+          Writes the file <filename> from memory at <ramadr>.
+
+           eg: SAVE EDIT.OBJ 5F00
+       DMF-80/ST                                                        Page: 3
+
+
+       RUn <objname> [user operands]
+
+          Loads the file  <objname>.OBJ into memory at  it's  run  address  amd
+          jumps to it. D-E register pair points to the rest of the command line
+          (terminated by CR (0Dh)), allowing programs to receive operands.
+
+           eg: RUN BASIC,2
+               RUN EDIT TEST.ASM
+
+       <objname> [user opernads]
+
+          Implied  "RUN"  command.  Executes file  <objname>.OBJ as if by  RUN.
+          NOTE: Unlike "RUN",  the implied run will NOT read the disk directory
+          if it already has it in memory  (this avoids  starting  the  disk  on
+          typing mistakes), therefore when a disk is changed, an implied run of
+          a file on that disk may not work until some  directory  activity  has
+          occured.
+
+           eg: BASIC,2
+               EDIT TEST.ASM
+
+
+       REad <drive> <diskadr> <blks> <ramadr>
+
+          Reads from drive <drive>,  starting at sector <diskadr>,  for  <blks>
+          sectors, placing rata in memory at <ramadr>.
+
+           eg: READ 1 4 10 8F00
+
+
+       WRite <drive> <diskadr> <blks> <ramadr>
+
+          Writes to drive  <drive>  starting at sector  <diskadr>,  for  <blks>
+          blocks from memory at <ramadr>
+
+           eg: WRITE 2 4 10 8F00
+
+
+       SEt DRive <drive>
+
+          Sets the default drive number  (1-3)  which the dos will use when  no
+          drive letter is supplied.
+
+
+          SEt OUtput <device>
+
+          Sets the console output device to <device> (0-255).  255 is a special
+          case and means inhibit console output.  Note:  "."  prompt and  input
+          character echo will still occur ont he real console (0).
+
+
+       REt
+
+          Returns from DOS to calling program. If not nested, then no action is
+          taken.
+       DMF-80/ST                                                        Page: 4
+
+
+       DISplay <ramadr1> pramadr2]
+
+          Displays memory at <ramadr1>.  If <ramadr2>  is given,  displays from
+          <ramadr1> to <ramadr2>.
+
+
+       STore <ramadr> <byte1> [byte2 byte3 ...]
+
+             Stores  the  operand  <bytes>  into  sequential  memory  locations
+          starting at <ramadr>.
+       DMF-80/ST                                                        Page: 5
+
+
+       2. COMMAND MODE
+
+          Dos commands can be entered whenever the dos is in command  mode  and
+          prompts with  '.'.  Any lower-case characters input will be converted
+          to upper case.  Characters may be deleted from the  input  line  with
+          either a BACKSPACE  (08h)  or DELETE  (7Fh)  character.  If DELETE is
+          used, a space will be printed over the characters being deleted.  The
+          entire input line can be cancled with a  CONTROL-C  (03h)  character.
+          The input line can be a maximum of 128 characters in length.
+
+          Output from dos commands  can  be  stopped  with  a  CONTROL-S  (13h)
+          character from the console,  and restarted  with  a  CONTROL-Q  (11h)
+          character.  At anytime,  output from dos commands can be  stopped  by
+          sending a CONTROL-C character from the console. If this is done, then
+          a return code of (5) will be returned by that command.
+
+
+       3. DISK DIRECTORY
+
+          The first four blocks  (1k)  of the disk is  reserved  for  the  disk
+          directory.  This directory consists of 64 file entries, each of which
+          is 16 bytes in size, and have the following format:
+
+                                |FILENAME|TYP|DS|S|UD|
+
+           Where:
+               FILENAME    - is the name of the file           (8 bytes)
+               TYP         - is the type/extension             (3 bytes)
+               DA          - is the starting disk address      (2 bytes)
+               S           - is the size in blocks             (1 byte )
+               UD          - is two bytes of user data.        (2 bytes)
+                   For .OBJ files, UD contains the run address.
+
+       4. RETURN CODES
+
+          When  a  command  or  .OBJ  file  terminates,  the  contents  of  the
+          accumulator is assumed to be the RETURN CODE.  The dos  will  display
+          this return code in the form of "R(rc);"  where rc is the contents of
+          the accumulator.  If the return code was ZERO (0),  this means normal
+          completion, and the message "R;" is output instead.
+
+           The return codes produced by the dos commands are:
+
+               0       - Normal completion (success)
+               1       - Operand missing or invalid
+               2       - File does not exist
+               3       - File already exists
+               4       - Disk capacity overflow
+               5       - Directory full
+               6       - Unrecoverable disk error
+               7       - Stopped by CONTROL-C from console.
+               255     - Unknown command.
+
+          When a dos command RETURN CODE is zero, the Z flag is set,  otherwise
+          it is cleared.
+       DMF-80/ST                                                        Page: 6
+
+
+       5. BOOTSTRAP (IPL)
+
+          When the system is IPL'd,  the bootstrap loaded loads one block  (256
+          bytes)  at address zero  (0000).  This is the user program interface,
+          handling all requests from outside software. The remainder of the dos
+          is loaded into high memory  (usually F000h),  and  is  accessed  only
+          through the UPI.  User programs normally start at 0100,  which  gives
+          them the maximum available RAM.
+
+          When the system is first booted up,  the dos looks for a file  called
+          "IPLSTART.OBJ".  If it exists,  then it is automatically  loaded  and
+          run, otherwise the dos enters command mode.
+
+
+       6. DISK SUBSYSTEM
+
+          The disk subsystem performs all I/O to the disk drives.  It has three
+          main  operating  modes:  Reading  the  disk,  Writing  the  disk  and
+          Verifying the disk.  If any errors occur during these operations, the
+          disk system will retry the operation up to ten times.  If it is still
+          unsuccessful,  a message of the  form  "HDE(nn)  Dxx  Syyy"  will  be
+          displayed,  where nn is the error code  (see below),  xx is the  disk
+          drive number, and yyy is the sector where the error occured. A return
+          code of (4)  will be returned to the operating system indicating that
+          a HARD DISK ERROR has  occured.  During  WRITE  operations,  data  is
+          verified after each track is written.
+
+               DISK SYSTEM ERROR CODES:
+
+                   0       - Success, will not be displayed
+                   1       - Sync. byte not found (Start of block)
+                   2       - Read data CRC error
+                   3       - Verify data error
+                   4       - Write protect violation
+                   255     - Parameters to disk system were invalid.
+       DMF-80/ST                                                        Page: 7
+
+
+       7. SUPERVISOR CALLS
+
+          All communication with the dos is done through a  pseudo  instruction
+          called an SVC.  This instruction  has  the  form  <RST2(D7h)><operand
+          byte>.  The  <operand byte>  is examined by the dos to determine  the
+          request.
+
+          Here are the currently implemented SVC's.  ("*"  indicates  that  dos
+          return code conventions  are  observed,  return-code  and  flags  are
+          undefined for all others. Attempt to execute an undefined SVC results
+          in a return code of 255):
+
+           0  -Reboot system. Used to return to DOS when DOS memory has been
+               overwritten.
+
+           1  -Tests the console to determine if any characters have been
+               entered, returns with character in A and 'C' flag set if so.
+               Sets 'Z' flag if character was CONTROL-C (03h). If no characters,
+               returns FF in A, and Z+C clear.
+
+           2  -Gets a character from the console and returns in A. Waits
+               until a character has been entered.
+
+           3  -Outputs character in A to console.
+
+           4  -Gets a character from input device passed in A, returns
+               character in A.
+
+           5  -Outputs character in B to device in A.
+
+           6  -Outputs Line-Feed/Carriage-Return to console. Returns with Z
+               flag set if CONTROL-C (03h) has been entered. Also tests for
+               CONTROL-S (13h) entered, and if so, waits until CONTROL-Q (11h)
+               is entered.
+
+           7  -Prints a space on the console, no registers affected.
+
+           8  -Writes the string pointed to by HL to the console. String
+               terminates with CR (0Dh) or NUL (00) - if CR is found, a CR/LF
+               pair (newline) will be output.
+
+           9  -Outputs value in A to console (2 HEX digits.)
+
+           10 -Outputs value in HL to console (4 HEX digits).
+
+           11 -Outputs value in HL to console (1-5 DECIMAL digits).
+
+           12 -Gets and buffers a line from the console. Prompts with ".",
+               points DE to the buffer.
+
+           13 -Same as (12) but with no "." prompt.
+
+           14 -Advances DE to the first non-blank character. Sets Z flag if
+               it is CR (end of line).
+
+       *   15 -Gets value in HL from HEX operand in line pointed to by DE.
+       DMF-80/ST                                                        Page: 8
+
+
+       *   16 -Gets value in HL from DECIMAL operand in line pointed to by
+               DE.
+
+       *   17 -Gets and stores within the DOS a filename from the line
+               pointed to by DE (may contain "*"). Points HL to saved name.
+               Saved name is in same form as directory entry (8 bytes for
+               name, 3 bytes for type, no "." between. Names/Types shorter
+               than 8/3 characters are padded to the right with blanks).
+               C = disk# indicated.
+
+       *   18 -Tests name gotten by (17) for validity as a single file
+               (no "*"s etc.). Points HL to saved name.
+
+       *   19 -Gets and stores a filename pointed by DE and insures that
+               it is valid as a single file. Points HL at saved name, C=
+               disk unit indicated.
+
+           20 -Compares name pointed to by HL to name from (17) or (19).
+               Works same as operand to "DIRect". IE: Matches "*"s to
+               "anything". Z flag set on exit if names match.
+
+       *   21 -Reads directory into ram buffer at FC00. Uses disk drive
+               from (17), (18) or (29). Points HL at the start of the 1k
+               buffer.
+
+       *   22 -Writes directory from ram buffer at FC00. Uses disk drive
+               from (17), (18) or (29).
+
+       *   23 -Locates name from (17) or (19) in directory read in by (21).
+               Points HL at first byte of entry. On exit, Z flag set if
+               the file was found.
+
+       *   24 -Locates name from (17) or (19) in directory. Reads directory
+               into buffer first. Points HL at directory entry. On exit Z
+               flag is set if the file was found.
+
+       *   25 -Calculates operands for disk command from directory entry
+               pointed to by HL, ram address passed in BC. To complete Load
+               or Save, Just indicate operation in B then call (27) or (28).
+               If success, then Z flag is set and A contains number of
+               blocks to load. Otherwise, Z is cleared and A contains return
+               code.
+
+       *   26 -Calculates operands for disk command from buffered filename,
+               ram address passed in HL. To complete Load or Save, Just indicate
+               operation in B then call (27) or (28). If success, then Z flag
+               is set and A contains number of blocks to load. Otherwise, Z is
+               cleared and A contains return code.
+
+       *   27 -Reads/Writes/Verifies disk. A=#blocks, C=command(0=Write,
+               1=Read,2=Verify), C=drive#, DE=ram address HL=disk address.
+
+       *   28 -Same as (27) but ignores C, disk drive used is that from (17)
+               or (19).
+       DMF-80/ST                                                        Page: 9
+
+
+       *   29 -Sets disk drive for disk operations using dos supplied drive#
+               (ie: (21) and (22)) to value passed in A.
+
+       *   30 -Reenter DOS with no return. Return code is passed in A.
+               (see also SVC 39).
+
+       *   31 -Enter DOS, returns when dos "RET" command is issued.
+
+       *   32- Execute DOS command pointed to by DE.
+
+       *   33 -List directory from "DIRect" operand pointed to by DE.
+
+           34 -Sets address to call when RST1 instruction is executed to
+               value passed in HL. If RST1 is executed before this SVC,
+               result is non-returnable dos reentry.
+
+           35 -Set console output device to value passed in A. Device 255
+               means "no output".
+
+           36 -Looks up word pointed to by DE in table pointed to by HL.
+               Format of table is: Words separated by single spaces
+               ending with two spaces (eg: "READ WRITE TEST  "). Returns
+               position of word in table in both A and B, starting with
+               zero (0) for the first word. If the word is not found,
+               returns one greater than the number of words in the table.
+               Skips any leading blanks and leaves DE pointing to the
+               first non-blank character following the word. NOTE: Only
+               tests the number of characters as the word in the table
+               (ie: If DE points to "COMMAND" and the entry "COM" appears
+               in the table, then a match will occur, and DE will be left
+               pointing to the second "M" in "COMMAND".
+
+           37 -Finds the next free disk address following the last file
+               in the currently loaded disk directory and returns it in HL.
+               DOES NOT READ IN THE DIRECTORY FIRST!
+
+       *   38 -Finds the first unused 16 byte directory entry (contains no
+               file information) in the currently loaded disk directory,
+               and returns it's address in HL.
+               DOES NOT READ IN THE DIRECTORY FIRST!
+
+           39 -Sets the address to be jumped to when an SVC 30 instruction
+               is encountered to the value passed in HL. If H contains zero,
+               then address is reset to reenter dos.
+
+       *   40 -Sets the default drive used by DOS to the ASCII value passed
+               in A (ie: '1' = drive1, '2'=Drive 2)
+
+       *   41- Obtains a filename only (no extension) from the line pointed to
+               by DE. Filename must indicate a a single file (no '*'s). Adds
+               the type ".OBJ". On exit, HL points to the buffered file type,
+               allowing it to be changed. Saved name is in same form as
+               directory entry (8 bytes for name, 3 bytes for type, no "."
+               between. Names shorter than 8 characters are padded to the right
+               with blanks).
+       DMF-80/ST                                                        Page: 10
+
+
+       8. INTERFACING TO USER PROGRAMS
+
+          8.1 Parameter Passing
+
+             When a user program is executed  (via  "RUN",  "JUMP"  or  implied
+             RUN),  the dos will point  the  DE  register  pair  at  the  first
+             non-blank character following the the  name  of  the  program  (or
+             address in the case of  "JUMP")  in the command line  buffer,  and
+             will place that character in A.  The Z flag will  be  set  if  the
+             character is CR,  which indicates that there are no  command  line
+             operands.  If parameters exist, the user program may now use SVC's
+             to extract them. SVC's exist to obtain filenames, lookup keywords,
+             and to obtain decimal and hex numbers.
+
+          8.2 Program Termination
+
+             A user program can terminate in one of two ways.  First,  the  the
+             stack has not been moved,  it can just issue  a  RET  instruction.
+             Second, it can issue the "SVC 30" instruction. In either case, the
+             content of the accumulator is used as the return code.  Return via
+             "RET" will allow dos to return to any routine calling it  (via SVC
+             31).  Use of  "SVC 30"  will reinitialize the dos,  DESTROYING any
+             nested DOS calls.  Programs  running  at  address  0100h  normally
+             destroy any calling program (also loaded at 0100h)  when executed,
+             therefore they should exit with "SVC 30"  to insure that no return
+             to a previously active program will be attempted.
+       DMF-80/ST                                                        Page: 11
+
+
+       9. UTILITIES
+
+          The following  utility  programs  are  supplied  with  the  DMF  disk
+          operating system:
+
+          9.1 DISKUTIL - Functions for diskette maintenance
+
+                                 DISKUTIL <function>
+
+               INIT    - Initializes the disk to blanks (deleteing all files).
+                         Prompts with drive number, allowing you to change
+                         disks first.
+
+               SORT    - Sorts the directory on the disk by disk-address.
+                         Prompts for drive number.
+
+               COMP    - Compresses the disk, reclaiming any extra space in
+                         between files. Prompts for drive number.
+
+               COPY    - Copes a disk from one drive to another. Prompts for
+                         the "FROM" and "TO" drives.
+
+          9.2 TYPE - Display file on console
+
+                        TYPE <filename> [start-line# [#lines]]
+
+             Displays the contents of the text file <filename>  on the console.
+             An optional starting line number and number of  lines  to  display
+             may be specified.
+
+          9.3 RENAME - Rename a file
+
+                             RENAME <filename> <newname>
+
+             Changes the name of the specifed file to the new name given.
+       DMF-80/ST                                                        Page: 12
+
+
+          9.4 @ - Command File Interpreter
+
+                               @ <filename> <operands>
+
+             Command files are a method of executing multiple DOS commands  and
+             programs with only one command from the console.  The command file
+             interpreter has its own set of  control  statements,  as  well  as
+             variables which may be used to provide and access operands to  the
+             dos commands.  All control statements and variables begin with "&"
+             to distinguish them from dos commands.
+
+             The variables are "&@"  and "&A-&Z".  Each variable may contain up
+             to 8 characters of information.  When a command file is first run,
+             all variables are cleared to blanks,  except for  "&@"  which will
+             contain a number indicating how many operands were  supplied,  and
+             "&N" which contains the name of the command file.  Any operands to
+             the command file will be  assigned  to  variables  beginning  with
+             "&A".  Ie:  &A contains the first operand,  &B contains the second
+             and so on.  Before a line from the command file is  executed,  any
+             variables  in  that  line  are  replaced  with  the  values   they
+             represent.
+
+             After a dos command is executed,  the return code is  assigned  to
+             the special variable "&R".
+
+             Any line beginning with  "*"  is assumed to be a  comment  and  is
+             ignored by the interpreter.
+
+             Labels may be placed at the beginning of any line,  and must start
+             with "-".  A label may be on a line by itself, or may have another
+             statement following on the same line.
+               eg: -LABEL
+                   -LABEL DIR  *.OBJ
+
+             9.4.1 Command Control Statements
+
+                Operands to control statements are as follows:
+
+               <a> - Any variable or constant which evaluates to a numeric
+                     value. Eg: 100
+               <x> - Any variable or constant. EG: &A or TEST
+               <v> - Any variable.
+               <l> - Any label. Eg: -LOOP
+               ..  - More than one operand may be given.
+       DMF-80/ST                                                        Page: 13
+
+
+       STATEMENT        -------------------- FUNCTION -----------------------
+
+       &TYPE  <x> ..       Displays all operands on the console.
+                           eg: &TYPE FIRSTS OPERAND IS &A
+
+       &TYPEN <x> ..       Same as &TYPE but no CR/LF is output at the end.
+
+       &READ  <v> ..       Operands must be variables. Gets values for the
+                           operand variables from the console. Prompts with
+                           ".". Any extra words from the input line are
+                           ignored. If there are more operand variables then
+                           there are words in the input line, then the remainder
+                           are set to blanks.  eg: READ &P &G &R
+
+       &READN <v> ..       Same as &READ, but no "." prompt.
+
+       &NUM   <x> ..       Sets the return code variable "&R" to zero (0) if
+                           the arguments are all numeric, otherwise "&R" is set
+                           to one (1). EG: &NUM &A &B &C
+                   NOTE:   The &NUM function will return a one (1) if all of
+                           it's arguments are null (blanks), however if more than
+                           one argument is given, and one of them is null, &NUM
+                           does not "know" that that argument was ever there, and
+                           will return a zero (0) if the remaining arguments are
+                           numeric.
+
+       &SKIP <n>           Skips ahead <n> lines in the command file and
+                           continues from there.
+
+       &GOTO <l>           Jumps to label <l> and continues from there.
+
+       &EXIT <n>           Terminates command file execution and returns to dos
+                           with return code <n>.
+
+       &IF <x> = <x> <any statement>       Executes of <any statement> only if
+       &IF <n> < <n> <any statement>       the specified condition is TRUE.
+       &IF <n> > <n> <any statement>       (">" and "<" apply to numbers only).
+
+       <v> = <x>                           Assignment to variable.
+       <v> = <n> + <n>                     "+" and "-" can only be used with
+       <v> = <n> - <n>                     numbers.
+
+                In most cases,  all control statements,  operands and operators
+                (+, -, =, >, <) must be separated by at least one space.
+
+             9.4.2 Errors
+
+                If a syntax error occurs in a command file  (like trying to add
+                non-numeric values), execution will be stipped with the message
+                "ERROR,LINE=nn"  where nn is the line where the error  occured.
+                If the error was an attempt to &SKIP  beyond  the  end  of  the
+                file,,, the message "SKIP ERROR,LINE=nn" will be displayed.  If
+                the error was a jump to an undefined label, the message will be
+                "LABEL ERROR,LINE=nn".  If the  end  of  the  command  file  is
+                encountered, the message "<EOF>" will be printed.
+       DMF-80/ST                                                        Page: 14
+
+
+             9.4.3 Sample Command File
+
+           * THIS COMMAND FILE SIMPLY COUNTS FROM THE FIRST OEPRAND
+           * VALUE TO THE SECOND. IT HAS NO REAL PURPOSE OTHER THAN
+           * TO DEMONSTRATE COMMAND CONTROL STATEMENTS AND VARIABLES.
+           * THE THIRD OPERAND IS THE NAME OF A .OBJ FILE WHICH WILL
+           * BE RUN WHEN THE COUNT IS FINISHED
+           *
+           * VERIFY THERE ARE 3 OPREANDS
+           &IF &@ = 3 &SKIP 2
+           &TYPE "&N" REQUIRES THREE OPERANDS
+           &EXIT 1
+           * CHECK THAT OPERANDS 1 AND 2 ARE NUMBERS
+           &NUM &A &B
+           &IF &r = 0 &SKIP 2
+           &TYPE ARGUMENTS TO "&N" MUST BE NUMBERS
+           &EXIT 2
+           * PERFORM THE COUNT & DISPLAY
+           &B = &B + 1
+           -COUNT &TYPE &A
+           &A = &A + 1
+           &IF &A < &B GOTO -COUNT
+           * NOW RUN THE .OBJ FILE
+           * JUST FOR FUN, USE THE "DIR" COMMAND TO SEE IF IT EXISTS
+           DEV 255
+           DIR &C.OBJ
+           IF &r = 0 &SKIP 3
+           DEV 0
+           &TYPE THE FILE "&C.OBJ" DOES NOT EXIST
+           &EXIT 3
+           DEV 0
+           RUN &C
+           &TYPE done... RETCODE=&R
+           &EXIT &R
+       DMF-80/ST                                                        Page: 15
+
+
+             9.4.4 Saving Command Variables
+
+                Command file variables are stored  in  one  256  byte  page  of
+                memory  located  1k  (400h)  beyond  the   beginning   of   the
+                interpreter.  This page can be saved and loaded using  the  dos
+                "SAVE" and "LOAD"  commands.  This has the effect of saving and
+                restoring all of the variables.
+
+               eg: If you have the standard "@.OBJ" file origined to run
+                   at E000h, then you can use the commands:
+
+                           CR VARS.SAV 1
+                           SAVE VARS.SAV E400
+
+                   to save the variables in the file "VARS.SAV". The command:
+
+                           LOAD VARS.SAV E400
+
+                   can be used to restore the variables to their contents
+                   prior to SAVEing them.
+
+             NOTE: The special variable "&R" will be overwritten with the
+                   return code from the LOAD command and therefore will not
+                   be restored.
+
+          9.5 NSTAR - North Star DOS emulator
+
+                              NSTAR <program> [operands]
+
+             The NSTAR command implements a simulation of the NorthStar DOS 5.1
+             operating system by translating NorthStar DOS  entry  points  into
+             DMF SVC calls,  and  also  translating  the  DMF  directory  entry
+             structure  into  NorthStar  DOS  directory  entry  format.   Since
+             NorthStar DOS does not have three character file types, only files
+             with an extension of  "#nn"  are visible to the NorthStar program,
+             where nn is the NorthStar file type.  eg:  "BASIC.#01" shows up to
+             the  NorthStar  program  as  "BASIC"  with  a  file  type  of  "1"
+             (executable program).
+
+             <program> must be the name of an executable NorthStar DOS program.
+             For  example,  if  you  save  an  image  of  the  NorthStar  BASIC
+             interpreter into a DMF file called BASIC.#01, then you can run the
+             NorthStar BASIC under DMF with the command: NSTAR BASIC
+
+             Once loaded,  the "CAT"  command will show you only DMF files with
+             the extension "#nn". BASIC program can be loaded and saved in .#02
+             files,  and BASIC DATA can be stored in files having the extension
+             .#03.
+
+             NOTE:  An easy way to move files back and forth  between  DMF  and
+             NorStar DOS is to use the DMF READ and NorthStar  RD  commands  to
+             bypass the file structure and read files directly  from  the  disk
+             sectors.  You will first have to determine the file  position  and
+             size by viewing the disk directory under the appropriate operating
+             system. Once loaded, you can use the DMF CREATE/SAVE and NorthStar
+             CR/SF commands to save the content  of  the  file  in  the  booted
+             operating system format.
+       DMF-80/ST                                                        Page: 16
+
+
+          9.6 BGND - Start/Stop background processing
+
+                            BGND <.BGT program> [oprands]
+
+             The BGND command loads a background process  which  runs  whenever
+             the system is waiting for console I/O.
+
+             On the standard system,  BGND.OBJ loads  at  E700,  and  runs  the
+             background process at E000 - this provides 1.75k of memory to  the
+             background process.
+
+             The background process must be structured as follows:
+
+               ORG     $E000       ; Code goes here
+               JMP     INIT        ; Init function - called at starup
+               JMP     XGETC       ; Called while waiting for console input
+               JMP     XPUTC       ; Called while performing console output
+               JMP     XTESTC      ; Called while testing for console input
+               ...
+
+             Each of the  'X'  function above will be called during console I/O
+             requests - These functions must complete and return to the  OS  as
+             quickly as possible to avoid system performance degradation.
+       DMF-80/ST                                                        Page: 17
+
+
+       10. DMF MEMORY LAYOUT
+
+          10.1 Disk layout
+
+             The DMS DOS image occupies 12 blocks of disk space,  which  always
+             reside at disk sector address 4 to 15.  When DMF boots,  the first
+             block  (4)  is  loaded  into  memory  at  address  0000-00FF,  the
+             remaining 11 blocks  (5-15)  are loaded  into  memory  at  address
+             F000-FAFF.
+
+          10.2 Memory layout
+
+             The total memory "footprint" of a DMF system is as follows:
+
+               0000-00FF   = User Program Interface
+               0100-E7FF   = Available to application code
+               E800-EBFF   = NorthStar MDS disk controller hardware
+               EC00-EFFF   = Unallocated
+               F000-FAxx   = DMF system code
+               FAxx-FAFF   = Console I/O functions
+               FB00-FC00   = DMF internal memory and stack
+               FC00-FFFF   = DMF disk directory buffer
+
+          10.3 Entry points
+
+             The following entry points and reserved  locations  are  available
+             within the DMF User Program Interface:
+
+               0000    1       Last drive accessed
+               0001    1       Current track position on drive 1
+               0002    1       Current track position on drive 2
+               0003    1       Current track position on drive 3
+               0004    3       JMP to DMF loader (boot second stage)
+               0007    1       Drive directory last loaded from
+               0008    3       JMP for RST-1 vector (used by debugger)
+               0010    3       JMP for RST-2 vector (SVC handler)
+               0018    3       JMP for RST-3 vector (I/O INIT function)
+               0020    3       JMP for RST-4 vector (I/O IN   function)
+               0028    3       JMP for RST-5 vector (I/O OUT  function)
+               0030    3       JMP for RST-6 vector (I/O TEST function)
+               0036    1       00=Disk Read-After-Write check enabled
+               0038    3       JMP for RST-7 vector (Reboot system)
+               003B    --      SVC handler table (word address for each SVC)
+               00F2    8       DOS buffered filename NAME
+               00FA    3       DOS buffered filename EXTENSION/TYPE
+               00FD    1       DOS buffered filename DRIVE
+               00FE    2       DOS buffered filename USER DATA
+       DMF-80/ST                                                        Page: 18
+
+
+          10.4 Customizing console I/O functions
+
+             The console I/O function reside  in  the  unused  portion  of  the
+             memory block at FA00-FAFF at the very end of the DMF code image.
+
+             To  determine  the  first  available  address,  examine  the   JMP
+             instructions at all four I/O vectors (0018, 0020 , 0028 and 0030).
+             Which ever address is LOWEST represents the beginning of available
+             space.
+
+             You can replace the console I/O function be placing  new  code  in
+             the memory block (FAxx-FAFF) and patching the JMP vectors to point
+             to the correct routines:
+
+               0018    JMP INIT
+                   Initialize user I/O devices.
+                   All registers may be modified.
+
+               0020    JMP IN
+                   Get character from input device passed in A (0-254)
+                   Returns character in A, no other registers may be
+                   modified.
+
+               0028    JMP OUT
+                   Write character in B to device passed in A.
+                   No registers may be modified.
+
+               0030    JMP TEST
+                   Test for character entered on the console. If a character
+                   is found, the character is returned in A, and the C flag
+                   is set. The Z flag is also set if the character was CTRL-C.
+                   In no character was found, return A=FF and Z+C clear.
+                   No other registers may be modified.
+
+             It is best to do this to a inactive copy of the OS that  you  have
+             placed in memory via the LOAD command. Keep in mind that the first
+             256 bytes of the image represent code loaded at  0000,  while  the
+             remaining 11 blocks represent F000-FAFF.
+       DMF-80/ST                                                        Page: 19
+
+
+             It is possible to manually patch the loaded OS if you have a means
+             of doing so such as front panel switches.  Once DMF boots, it will
+             go into a loop trying to read  (or write)  the  console.  (In  the
+             non-specific DMF distribution,  all of the I/O vectors point to  a
+             single  "JMP *"  loop which will cause the system to hang once  it
+             has booted).  Once this happens,  stop the system,  then  manually
+             enter the I/O code,  and patch the 0018,  0020,  0028 and 0030 JMP
+             vectors to activate the new functions.  Then start  the  processor
+             executing at F000  -  if  everything  worked  correctly,  the  DMF
+             startup prompt should appear on your console.
+
+             You can save the newly patched DMF I/O functions directly  to  the
+             disk from F000 with the SAVE command, however the vectors in block
+             zero cannot be written this way. You will have re-read block0 from
+             the disk into unused memory and manually patch the  vectors.  Here
+             are example commands which will save a newly  patch  OS,  assuming
+             the I/O function addresses are: INIT=FA09,  IN=FA21,  OUT=FA2B and
+             TEST=FA4B :
+
+               .WRITE 1 15 1 FA00          <= Save I/O code
+               .READ 1 4 1 100             <= Read UPI (block 0)
+               .DISP 110 13F               <= Visually confirm JMP's
+               .STORE 119 09 FA            <= Patch INIT vector
+               .STORE 121 21 FA            <= Patch IN   vector
+               .STORE 129 2B FA            <= Patch OUT  vector
+               .STORE 131 4B FA            <= Patch TEST vector
+               .DISP 110 13F               <= Visually confirm changes
+               .WRITE 1 4 1 100            <= Rewrite UPI (block 0)
+

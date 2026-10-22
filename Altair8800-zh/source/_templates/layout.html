@@ -1,0 +1,82 @@
+{% extends "!layout.html" %}
+
+{% set favicon_url = "/images/icon-lightning.svg" %}
+{% set css_files = css_files + ["_static/style.css", "_static/widths.css", "_static/background.css"] %}
+
+{% block extrahead %}
+  {{ super() }}
+  <link rel="me" href="https://musician.social/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://musicians.today/@tadonic"       aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.social/@ubuntourist"   aria-label="Mastodon profile"  />
+  <link rel="me" href="https://mastodon.well.com/@kjcole"      aria-label="Mastodon profile"  />
+  <link rel="me" href="https://social.trom.tf/profile/tadonic" aria-label="Friendica profile" />
+{% endblock %}
+
+{%- macro cspbar() %}
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>{{ _('Navigation') }}</h3>
+      <ul>
+        {%- for rellink in rellinks %}
+        <li {% if loop.first %}class="right loop_first"{% else %}class="right"{% endif %}>
+          <a href="{{ pathto(rellink[0])|e }}" title="{{ rellink[1]|striptags|e }}"
+             {{ accesskey(rellink[2]) }}>{{ rellink[3] }}</a>
+          {%- if not loop.first %}{{ reldelim2 }}{% endif %}</li>
+        {%- endfor %}
+        {%- block rootrellink %}
+        <li class="nav-item nav-item-0"><a href="{{ pathto(root_doc)|e }}">{{ shorttitle|e }}</a>{{ reldelim1 }}</li>
+        {%- endblock %}
+        {%- for parent in parents %}
+          <li class="nav-item nav-item-{{ loop.index }}"><a href="{{ parent.link|e }}" {% if loop.last %}{{ accesskey("U") }}{% endif %}>{{ parent.title }}</a>{{ reldelim1 }}</li>
+        {%- endfor %}
+        <li class="nav-item nav-item-this"><a href="{{ link|e }}">{{ title }}</a></li>
+        {%- block relbaritems %} {% endblock %}
+      </ul>
+    </div>
+{%- endmacro %}
+
+{# wrap relbars in distinct classes to make themeing easier #}
+{%- block relbar1 %}
+    <div class="relbar-top">
+        {{ cspbar() }}
+    </div>
+{% endblock %}
+
+{%- block relbar2 %}
+    <div class="relbar-bottom">
+        {{ cspbar() }}
+    </div>
+{% endblock %}
+
+{%- block footer %}
+    <div class="footer" role="contentinfo" aria-label="footer contentinfo">
+    {%- if show_copyright %}
+<span class="license-text"
+   prefix="dct: http://purl.org/dc/terms/ cc: http://creativecommons.org/ns#"><a
+   rel="cc:attributionURL"
+   property="dct:title"
+   href="https://ubuntourist.codeberg.page/">Ubuntourist Trap</a>
+&#x1f12f; Copyleft {{ copyright[0:4] }} by
+<a rel="cc:attributionURL dct:creator"
+   property="cc:attributionName"
+   href="https://codeberg.org/ubuntourist/">Kevin Cole</a>
+(<a rel="me"
+    href="https://mastodon.social/@ubuntourist"
+    aria-label="Mastodon profile">Tadonic the Flautulant</a>)
+is licensed under
+<a rel="license"
+   href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0<img
+   class="cc" alt="Creative Commons 4.0 license (CC) "
+   src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img
+   class="cc" alt="with Attribution (BY), "
+   src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><img
+   class="cc" alt="Share Alike (SA)"
+   src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"></a></span>
+    {%- endif %}
+    {%- if last_updated %}
+      {% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}
+    {%- endif %}
+    {%- if show_sphinx %}
+      {% trans sphinx_version=sphinx_version|e %}Created using <a href="https://sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}
+    {%- endif %}
+    </div>
+{%- endblock %}
